@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ConfigSnapperExample": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
