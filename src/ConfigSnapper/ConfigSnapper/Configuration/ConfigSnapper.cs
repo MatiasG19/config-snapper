@@ -5,8 +5,8 @@ namespace Matiasg19.ConfigSnapper.Configuration;
 public class ConfigSnapper
 {
     [JsonRequired]
-    public required string SnapshotDirectory;
+    public string SnapshotDirectory { get; set; } = "";
 
     [JsonRequired]
-    public required Dictionary<string, string> SnapConfigs;
+    public Dictionary<string, string> SnapConfigs { get; set; } = [];
 }

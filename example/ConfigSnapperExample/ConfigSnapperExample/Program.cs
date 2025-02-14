@@ -1,15 +1,14 @@
 ﻿using Matiasg19.ConfigSnapper;
+using Microsoft.Extensions.Configuration;
 
-Console.WriteLine("Hello, World!");
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(AppContext.BaseDirectory)
+    .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
+    .Build();
 
-var snapper = new ConfigSnapper(new Matiasg19.ConfigSnapper.Configuration.ConfigSnapper()
-{
-    SnapshotDirectory = "C:\\Users\\mgalu\\Downloads\\TestSnapshots",
-    SnapConfigs = new Dictionary<string, string>
-    {
-        { "Test", "C:\\Users\\mgalu\\Downloads\\gaviscon.txt" }
-    }
+var snapperConfig = new Matiasg19.ConfigSnapper.Configuration.ConfigSnapper();
+configuration.GetRequiredSection("ConfigSnapper").Bind(snapperConfig);
 
-});
+var snapper = new ConfigSnapper(snapperConfig);
 
 snapper.CreateSnapshot();

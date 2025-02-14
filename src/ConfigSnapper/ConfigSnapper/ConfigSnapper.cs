@@ -19,6 +19,7 @@ public class ConfigSnapper
 
     public void CreateSnapshot()
     {
+        Console.WriteLine($"ConfigSnapper starting...");
         string context = _config.SnapshotDirectory + "/ConfigSnapperSnapshots";
 
         // Create snapshot directory
@@ -36,25 +37,32 @@ public class ConfigSnapper
             string dir = $"{context}/{snapConfig.Key}";
             if (!Directory.Exists(dir))
             {
-                Console.WriteLine($"Snapshot for {snapConfig.Key} does not exist.");
+                Console.WriteLine($"Snapshot directory for {snapConfig.Key} does not exist.");
                 Directory.CreateDirectory(dir);
                 File.Copy(snapConfig.Value, $"{dir}/{Path.GetFileName(snapConfig.Value)}");
-                Console.WriteLine($"Snapshot for {snapConfig.Key} initialized.");
+                Console.WriteLine($"Snapshot directory for {snapConfig.Key} initialized.");
             }
             else
             {
-                Console.WriteLine($"Snapshot for {snapConfig.Key} created.");
-                File.Copy(snapConfig.Value, $"{dir}/{Path.GetFileName(snapConfig.Value)}", true);
+                if (File.Exists(snapConfig.Value))
+                {
+                    File.Copy(snapConfig.Value, $"{dir}/{Path.GetFileName(snapConfig.Value)}", true);
+                    Console.WriteLine($"Config for {snapConfig.Key} copied.");
+                }
+                else
+                    Console.WriteLine($"Config for {snapConfig.Key} does not exist.");
             }
         }
 
         // Create snapshot
-        if (!string.IsNullOrWhiteSpace(ExecuteCommand(context, "git", "status --porcelain")))
+        if (!string.IsNullOrEmpty(ExecuteCommand(context, "git", "status --porcelain")))
         {
             ExecuteCommand(context, "git", "add . ");
             ExecuteCommand(context, "git", "commit -a -m \"Snapshot\"");
             Console.WriteLine($"Snapshot created.");
         }
+        else
+            Console.WriteLine($"No changes found.");
     }
 
     private string ExecuteCommand(string workingDirectory, string command, string arguments)
