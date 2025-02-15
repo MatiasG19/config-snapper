@@ -1,7 +1,11 @@
 {
   "profiles": {
     "ConfigSnapperExample": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "environmentVariables": {
+        "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
+        "OTEL_SERVICE_NAME": "ConfigSnapperExample"
+      }
     },
     "Container (Dockerfile)": {
       "commandName": "Docker"

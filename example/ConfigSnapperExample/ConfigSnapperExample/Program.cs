@@ -7,7 +7,7 @@ builder.Services.AddConfigSnapper(builder.Configuration);
 
 var h = builder.Build();
 
-h.Services.UseConfigSnapper();
+h.Services.UseConfigSnapper(builder.Configuration);
 
 h.Start();
 

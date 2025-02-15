@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Matiasg19.ConfigSnapper.Configuration;
@@ -17,4 +16,5 @@ public class ConfigSnapper
     public bool Backup { get; set; }
 
     public string? BackupDirectory { get; set; }
+    public bool OpenTelemetry { get; set; }
 }
