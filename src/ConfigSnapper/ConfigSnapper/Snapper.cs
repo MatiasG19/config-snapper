@@ -35,7 +35,12 @@ public class Snapper
                 NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
             };
 
-            watcher.Changed += (o, s) => CreateSnapshot();
+            watcher.Changed += (o, s) =>
+            {
+                CreateSnapshot();
+                if (_config.Backup)
+                    CreateBackup(snapConfig.Key);
+            };
             watcher.EnableRaisingEvents = true;
             _configWatchers.Add(watcher);
         }
@@ -90,5 +95,28 @@ public class Snapper
         }
         else
             Console.WriteLine($"No changes found.");
+    }
+
+    private void CreateBackup(string sourceName)
+    {
+        _config.SnapshotSources.TryGetValue(sourceName, out string? sourcePath);
+
+        if (sourcePath is null)
+            return;
+
+        string fileName = Path.GetFileName(sourcePath);
+        string backupPath = _config.BackupDirectory is null ?
+            $"{AppContext.BaseDirectory}/{fileName}_ConfigSnapperBackups" :
+            $"{_config.BackupDirectory.GetAbsolutePath()}/{fileName}_ConfigSnapperBackups";
+
+        if (!Directory.Exists(backupPath))
+        {
+            Directory.CreateDirectory(backupPath);
+        }
+
+        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+        string fileExtension = Path.GetExtension(fileName);
+        string date = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        File.Copy(sourcePath.GetAbsolutePath(), $"{backupPath}/{fileNameWithoutExtension}_{date}{fileExtension}");
     }
 }

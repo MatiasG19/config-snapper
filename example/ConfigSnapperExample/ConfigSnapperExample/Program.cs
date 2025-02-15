@@ -11,5 +11,5 @@ h.Services.UseConfigSnapper();
 
 h.Start();
 
-// To keep console running (press any key to shutdown)
+// Keep console running (press any key to shutdown)
 Console.ReadLine();
