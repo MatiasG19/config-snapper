@@ -34,24 +34,21 @@ public class ConfigSnapper
         // Create snapshot directories and copy configs into them
         foreach (var snapConfig in _config.SnapConfigs)
         {
+            if (!File.Exists(snapConfig.Value))
+            {
+                Console.WriteLine($"Config for {snapConfig.Key} does not exist.");
+                continue;
+            }
+
             string dir = $"{context}/{snapConfig.Key}";
             if (!Directory.Exists(dir))
             {
-                Console.WriteLine($"Snapshot directory for {snapConfig.Key} does not exist.");
                 Directory.CreateDirectory(dir);
-                File.Copy(snapConfig.Value, $"{dir}/{Path.GetFileName(snapConfig.Value)}");
                 Console.WriteLine($"Snapshot directory for {snapConfig.Key} initialized.");
             }
-            else
-            {
-                if (File.Exists(snapConfig.Value))
-                {
-                    File.Copy(snapConfig.Value, $"{dir}/{Path.GetFileName(snapConfig.Value)}", true);
-                    Console.WriteLine($"Config for {snapConfig.Key} copied.");
-                }
-                else
-                    Console.WriteLine($"Config for {snapConfig.Key} does not exist.");
-            }
+
+            File.Copy(snapConfig.Value, $"{dir}/{Path.GetFileName(snapConfig.Value)}", true);
+            Console.WriteLine($"Config for {snapConfig.Key} copied.");
         }
 
         // Create snapshot
