@@ -16,7 +16,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 # Installieren Sie clang/zlib1g-dev-Abhängigkeiten für die Veröffentlichung unter nativ
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    clang zlib1g-dev
+    clang zlib1g-dev git
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ConfigSnapperExample/ConfigSnapperExample.csproj", "ConfigSnapperExample/"]
