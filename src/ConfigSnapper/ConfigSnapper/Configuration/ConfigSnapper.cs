@@ -1,12 +1,20 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Matiasg19.ConfigSnapper.Configuration;
 
 public class ConfigSnapper
 {
+    [Required]
     [JsonRequired]
-    public string SnapshotDirectory { get; set; } = "";
+    public Dictionary<string, string> SnapshotSources { get; set; } = [];
 
-    [JsonRequired]
-    public Dictionary<string, string> SnapConfigs { get; set; } = [];
+    public string? SnapshotDirectory { get; set; }
+
+    public bool Watch { get; set; }
+
+    public bool Backup { get; set; }
+
+    public string? BackupDirectory { get; set; }
 }
