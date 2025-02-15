@@ -38,8 +38,7 @@ public class Snapper
             watcher.Changed += (o, s) =>
             {
                 CreateSnapshot();
-                if (_config.Backup)
-                    CreateBackup(snapConfig.Key);
+                CreateBackup(snapConfig.Value);
             };
             watcher.EnableRaisingEvents = true;
             _configWatchers.Add(watcher);
@@ -69,27 +68,35 @@ public class Snapper
         // Create snapshot directories and copy configs into them
         foreach (var snapConfig in _config.SnapshotSources)
         {
-            if (!File.Exists(snapConfig.Value))
+            string sourcePath = snapConfig.Value.GetAbsolutePath();
+            string fileName = Path.GetFileName(sourcePath);
+            if (!File.Exists(snapConfig.Value.GetAbsolutePath()))
             {
                 Console.WriteLine($"Config for {snapConfig.Key} does not exist.");
                 continue;
             }
 
-            string dir = $"{context}/{snapConfig.Key}";
-            if (!Directory.Exists(dir))
+            string snapshotPath = $"{context}/{snapConfig.Key}";
+            bool snapshotDirCreated = false;
+            if (!Directory.Exists(snapshotPath))
             {
-                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(snapshotPath);
+                snapshotDirCreated = true;
                 Console.WriteLine($"Snapshot directory for {snapConfig.Key} initialized.");
             }
 
-            File.Copy(snapConfig.Value, $"{dir}/{Path.GetFileName(snapConfig.Value)}", true);
-            Console.WriteLine($"Config for {snapConfig.Key} copied.");
+            if (snapshotDirCreated || !string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(AppContext.BaseDirectory, "git", $"diff --no-index {sourcePath} {snapshotPath}/{fileName}")))
+            {
+                File.Copy(sourcePath, $"{snapshotPath}/{Path.GetFileName(sourcePath)}", true);
+                Console.WriteLine($"Config for {snapConfig.Key} copied.");
+                CreateBackup(sourcePath);
+            }
         }
 
         // Create snapshot
         if (!string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", "status --porcelain")))
         {
-            CommandLineHelper.ExecuteCommand(context, "git", "add . ");
+            CommandLineHelper.ExecuteCommand(context, "git", "add .");
             CommandLineHelper.ExecuteCommand(context, "git", "commit -a -m \"Snapshot\"");
             Console.WriteLine($"Snapshot created.");
         }
@@ -97,11 +104,9 @@ public class Snapper
             Console.WriteLine($"No changes found.");
     }
 
-    private void CreateBackup(string sourceName)
+    private void CreateBackup(string sourcePath)
     {
-        _config.SnapshotSources.TryGetValue(sourceName, out string? sourcePath);
-
-        if (sourcePath is null)
+        if (!_config.Backup)
             return;
 
         string fileName = Path.GetFileName(sourcePath);
@@ -110,9 +115,7 @@ public class Snapper
             $"{_config.BackupDirectory.GetAbsolutePath()}/{fileName}_ConfigSnapperBackups";
 
         if (!Directory.Exists(backupPath))
-        {
             Directory.CreateDirectory(backupPath);
-        }
 
         string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
         string fileExtension = Path.GetExtension(fileName);
