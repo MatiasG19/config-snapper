@@ -20,15 +20,18 @@ public class ConfigSnapper
     public void CreateSnapshot()
     {
         Console.WriteLine($"ConfigSnapper starting...");
-        string context = _config.SnapshotDirectory + "/ConfigSnapperSnapshots";
+        string context = $"{_config.SnapshotDirectory}/ConfigSnapperSnapshots";
 
         // Create snapshot directory
         if (!Directory.Exists(context))
         {
-            Console.WriteLine($"Snapshot directory does not exist.");
             Directory.CreateDirectory(context);
-            ExecuteCommand(context, "git", "init");
             Console.WriteLine($"Snapshot directory created: {context}");
+        }
+        if (!Directory.Exists($"{context}/.git"))
+        {
+            ExecuteCommand(context, "git", "init");
+            Console.WriteLine($"Snapshot directory initialized.");
         }
 
         // Create snapshot directories and copy configs into them
