@@ -1,5 +1,6 @@
 ﻿using ConfigSnapper.Extensions;
 using ConfigSnapper.Helpers;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Matiasg19.ConfigSnapper;
@@ -8,10 +9,12 @@ public class Snapper
 {
     private Configuration.ConfigSnapper _config;
     private List<FileSystemWatcher> _configWatchers = [];
+    private ILogger<Snapper> _logger;
 
-    public Snapper(IOptions<Configuration.ConfigSnapper> config)
+    public Snapper(IOptions<Configuration.ConfigSnapper> config, ILogger<Snapper> logger)
     {
         _config = config.Value;
+        _logger = logger;
         if (_config.Watch)
             InitializeWatchers(_config);
     }
@@ -19,6 +22,8 @@ public class Snapper
     public Snapper(Configuration.ConfigSnapper config)
     {
         _config = config;
+        using ILoggerFactory loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+        _logger = loggerFactory.CreateLogger<Snapper>();
         if (_config.Watch)
             InitializeWatchers(_config);
     }
@@ -35,11 +40,7 @@ public class Snapper
                 NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
             };
 
-            watcher.Changed += (o, s) =>
-            {
-                CreateSnapshot();
-                CreateBackup(snapConfig.Value);
-            };
+            watcher.Changed += (o, s) => { CreateSnapshot(); };
             watcher.EnableRaisingEvents = true;
             _configWatchers.Add(watcher);
         }
@@ -47,7 +48,7 @@ public class Snapper
 
     public void CreateSnapshot()
     {
-        Console.WriteLine($"ConfigSnapper starting...");
+        _logger.LogInformation($"ConfigSnapper starting...");
 
         string context = _config.SnapshotDirectory is null ?
             $"{AppContext.BaseDirectory}/ConfigSnapperSnapshots" :
@@ -57,12 +58,12 @@ public class Snapper
         if (!Directory.Exists(context))
         {
             Directory.CreateDirectory(context);
-            Console.WriteLine($"Snapshot directory created: {context}");
+            _logger.LogInformation($"Snapshot directory created: {context}");
         }
         if (!Directory.Exists($"{context}/.git"))
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
-            Console.WriteLine($"Snapshot directory initialized.");
+            _logger.LogInformation($"Snapshot directory initialized.");
         }
 
         // Create snapshot directories and copy configs into them
@@ -72,7 +73,7 @@ public class Snapper
             string fileName = Path.GetFileName(sourcePath);
             if (!File.Exists(snapConfig.Value.GetAbsolutePath()))
             {
-                Console.WriteLine($"Config for {snapConfig.Key} does not exist.");
+                _logger.LogInformation($"Config for {snapConfig.Key} does not exist.");
                 continue;
             }
 
@@ -82,13 +83,13 @@ public class Snapper
             {
                 Directory.CreateDirectory(snapshotPath);
                 snapshotDirCreated = true;
-                Console.WriteLine($"Snapshot directory for {snapConfig.Key} initialized.");
+                _logger.LogInformation($"Snapshot directory for {snapConfig.Key} initialized.");
             }
 
             if (snapshotDirCreated || !string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(AppContext.BaseDirectory, "git", $"diff --no-index {sourcePath} {snapshotPath}/{fileName}")))
             {
                 File.Copy(sourcePath, $"{snapshotPath}/{Path.GetFileName(sourcePath)}", true);
-                Console.WriteLine($"Config for {snapConfig.Key} copied.");
+                _logger.LogInformation($"Config for {snapConfig.Key} copied.");
                 CreateBackup(sourcePath);
             }
         }
@@ -98,10 +99,10 @@ public class Snapper
         {
             CommandLineHelper.ExecuteCommand(context, "git", "add .");
             CommandLineHelper.ExecuteCommand(context, "git", "commit -a -m \"Snapshot\"");
-            Console.WriteLine($"Snapshot created.");
+            _logger.LogInformation($"Snapshot created.");
         }
         else
-            Console.WriteLine($"No changes found.");
+            _logger.LogInformation($"No changes found.");
     }
 
     private void CreateBackup(string sourcePath)
@@ -119,7 +120,7 @@ public class Snapper
 
         string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
         string fileExtension = Path.GetExtension(fileName);
-        string date = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        string date = DateTime.Now.ToString("yyyyMMdd_HHmm_ss_fff");
         File.Copy(sourcePath.GetAbsolutePath(), $"{backupPath}/{fileNameWithoutExtension}_{date}{fileExtension}");
     }
 }
