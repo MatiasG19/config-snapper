@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
-using OpenTelemetry.Logs;
 
 namespace Matiasg19.ConfigSnapper;
 
@@ -22,10 +20,14 @@ public static class RegisterServices
         services.AddLogging(builder => builder.AddConsole());
 
         if (snapperConfig.OpenTelemetry)
-            services.AddLogging(builder => builder.AddOpenTelemetry(logging =>
+        {
+            services.AddLogging(builder => builder.AddOpenTelemetry());
+            var otel = services.AddOpenTelemetry();
+            if (configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] != null)
             {
-                logging.AddOtlpExporter();
-            }));
+                otel.UseOtlpExporter();
+            }
+        }
 
         services.AddOptions<Configuration.ConfigSnapper>()
             .Bind(configuration.GetSection(nameof(Configuration.ConfigSnapper)));
