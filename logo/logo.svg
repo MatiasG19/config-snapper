@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="800"
+   height="800"
+   viewBox="0 0 211.66667 211.66667"
    version="1.1"
    id="svg1"
    inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
@@ -24,9 +24,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
-     inkscape:zoom="0.16756945"
-     inkscape:cx="-1957.3974"
-     inkscape:cy="-104.43431"
+     inkscape:zoom="0.23697899"
+     inkscape:cx="1219.5174"
+     inkscape:cy="706.81372"
      inkscape:window-width="2560"
      inkscape:window-height="1369"
      inkscape:window-x="-8"
@@ -220,7 +220,7 @@
        fy="180.47206"
        r="109.69459"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.69367671,0,0,0.69367671,66.162292,-53.680051)" />
+       gradientTransform="matrix(0.69367671,0,0,0.69367671,295.04158,-77.126222)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient21"
@@ -231,7 +231,7 @@
        fy="149.62988"
        r="80.878799"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.69367671,0,0,0.69367671,22.749762,-8.5058985)" />
+       gradientTransform="matrix(0.69367671,0,0,0.69367671,251.62905,-31.95207)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient22"
@@ -242,7 +242,7 @@
        fy="165.79909"
        r="109.69459"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.69367671,0,0,0.69367671,22.589372,-43.501741)" />
+       gradientTransform="matrix(0.69367671,0,0,0.69367671,251.46866,-66.947912)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient24"
@@ -253,7 +253,7 @@
        fy="149.52274"
        r="129.51219"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.69367671,0,0,0.69367671,23.323512,-43.501741)" />
+       gradientTransform="matrix(0.69367671,0,0,0.69367671,252.2028,-66.947912)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient26"
@@ -264,7 +264,7 @@
        fy="146.25"
        r="63.75"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(571.08177,56.940704)" />
+       gradientTransform="translate(799.96106,33.494533)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient28"
@@ -275,7 +275,7 @@
        fy="145.85527"
        r="52.697365"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(571.08177,56.940704)" />
+       gradientTransform="translate(799.96106,33.494533)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient30"
@@ -286,7 +286,7 @@
        fy="146.44739"
        r="40.657894"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(571.08177,56.940704)" />
+       gradientTransform="translate(799.96106,33.494533)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient24"
@@ -350,7 +350,7 @@
        cy="146.33409"
        fx="104.59428"
        fy="146.33409"
-       r="78.075985"
+       r="78.075989"
        gradientTransform="matrix(0.89914026,0,0,0.92396103,-508.11484,-69.201854)"
        gradientUnits="userSpaceOnUse" />
     <radialGradient
@@ -374,7 +374,7 @@
        fy="146.09348"
        r="92.008545"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(3.0835997,12.193133)" />
+       gradientTransform="translate(1.9671129,-40.281632)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient17"
@@ -385,7 +385,7 @@
        fy="146.34201"
        r="85.205093"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.94903937,0,0,0.94903937,7.6223597,20.045553)" />
+       gradientTransform="matrix(0.94903937,0,0,0.94903937,6.5058729,-32.429212)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient2"
@@ -395,7 +395,7 @@
        fx="104.59428"
        fy="146.33409"
        r="78.075989"
-       gradientTransform="matrix(0.89914026,0,0,0.92396103,12.86349,23.517593)"
+       gradientTransform="matrix(0.89914026,0,0,0.92396103,11.747003,-28.957172)"
        gradientUnits="userSpaceOnUse" />
     <radialGradient
        inkscape:collect="always"
@@ -407,7 +407,7 @@
        fy="146.34201"
        r="85.205093"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.76231459,0,0,0.76231459,25.57823,47.218523)" />
+       gradientTransform="matrix(0.76231459,0,0,0.76231459,24.461743,-5.2562416)" />
   </defs>
   <g
      inkscape:label="Ebene 1"
@@ -417,32 +417,32 @@
     <circle
        style="mix-blend-mode:normal;fill:#1b1b1b;fill-opacity:1;stroke:none;stroke-width:1.72558"
        id="path5"
-       cx="673.91071"
-       cy="202.79596"
+       cx="902.78998"
+       cy="179.34979"
        r="73.223686" />
     <circle
        style="fill:url(#radialGradient28);stroke:none;stroke-width:2"
        id="path2"
-       cx="673.51599"
-       cy="203.1907"
+       cx="902.39526"
+       cy="179.74454"
        r="63.75" />
     <circle
        style="fill:url(#radialGradient30);stroke:none;stroke-width:1.70607"
        id="path3"
-       cx="664.83179"
-       cy="202.79597"
+       cx="893.71106"
+       cy="179.34981"
        r="52.697365" />
     <circle
        style="fill:url(#radialGradient32);stroke:none;stroke-width:1.43055"
        id="path4"
-       cx="654.37122"
-       cy="203.38809"
+       cx="883.25049"
+       cy="179.94193"
        r="40.657894" />
     <circle
        style="mix-blend-mode:normal;fill:url(#radialGradient26);stroke:none;stroke-width:1.42734"
        id="path8"
-       cx="336.09439"
-       cy="60.218697"
+       cx="564.97369"
+       cy="36.772526"
        r="89.839592" />
     <circle
        style="mix-blend-mode:normal;fill:url(#radialGradient9);fill-opacity:1;stroke:none;stroke-width:2"
@@ -453,14 +453,14 @@
     <circle
        style="mix-blend-mode:normal;fill:url(#radialGradient16);stroke:url(#radialGradient24);stroke-width:1.67248"
        id="path6-4"
-       cx="336.69943"
-       cy="71.509224"
+       cx="565.57874"
+       cy="48.063053"
        r="76.092583" />
     <circle
        style="mix-blend-mode:normal;fill:none;stroke:url(#radialGradient22);stroke-width:14.6907;stroke-dasharray:none"
        id="path6-4-2"
-       cx="336.81216"
-       cy="95.288872"
+       cx="565.69147"
+       cy="71.842697"
        r="56.103741" />
     <circle
        style="mix-blend-mode:normal;fill:url(#radialGradient26-7);stroke:none;stroke-width:1.42734"
@@ -486,20 +486,20 @@
     <circle
        style="fill:#868686;fill-opacity:1;stroke:none;stroke-width:23.745;stroke-dasharray:none;stroke-opacity:1"
        id="path33"
-       cx="418.40253"
-       cy="223.57599"
+       cx="647.2818"
+       cy="200.12982"
        r="92.947334" />
     <circle
        style="fill:#f5cf17;fill-opacity:1;stroke:none;stroke-width:25.4696;stroke-dasharray:none;stroke-opacity:1"
        id="path34"
-       cx="406.67944"
-       cy="224.13425"
+       cx="635.55872"
+       cy="200.68808"
        r="76.200058" />
     <circle
        style="fill:#e3e3e3;fill-opacity:1;stroke:none;stroke-width:15.4456;stroke-dasharray:none;stroke-opacity:1"
        id="path37"
-       cx="425.38055"
-       cy="222.73866"
+       cx="654.25983"
+       cy="199.2925"
        r="54.14949" />
     <circle
        style="fill:url(#radialGradient12);stroke:none;stroke-width:22.8534"
@@ -523,26 +523,26 @@
     <circle
        style="mix-blend-mode:normal;fill:url(#radialGradient12-0);fill-opacity:1;stroke:none;stroke-width:22.8534"
        id="path1-9"
-       cx="106.67036"
-       cy="158.28661"
+       cx="105.55387"
+       cy="105.81184"
        r="92.008545" />
     <circle
        style="mix-blend-mode:normal;fill:url(#radialGradient2-5);stroke-width:20.0851"
        id="path1-3-6"
-       cx="106.85002"
-       cy="158.92989"
+       cx="105.73353"
+       cy="106.45512"
        r="80.862991" />
     <circle
        style="mix-blend-mode:normal;fill:url(#radialGradient2-5-3);stroke-width:16.1333"
        id="path1-3-6-0"
-       cx="105.28271"
-       cy="158.77716"
+       cx="104.16621"
+       cy="106.3024"
        r="64.953087" />
     <ellipse
        style="mix-blend-mode:normal;fill:none;fill-opacity:1;stroke:url(#radialGradient4-3);stroke-width:9.861;stroke-dasharray:none"
        id="path1-3-1-4"
-       cx="106.90842"
-       cy="158.72459"
+       cx="105.79194"
+       cy="106.24983"
        rx="66.120872"
        ry="68.058777" />
   </g>
