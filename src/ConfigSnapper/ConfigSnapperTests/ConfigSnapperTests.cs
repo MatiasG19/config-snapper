@@ -1,4 +1,6 @@
-﻿namespace ConfigSnapperTests;
+﻿using DotNet.Testcontainers.Containers;
+
+namespace ConfigSnapperTests;
 
 public class ConfigSnapperTests
 {
