@@ -18,6 +18,10 @@ public class Snapper
     {
         _config = config.Value;
         _logger = logger;
+
+        if (!GitIsInstalled())
+            return;
+
         if (_config.Watch)
             InitializeWatchers(_config);
     }
@@ -27,8 +31,26 @@ public class Snapper
         _config = config;
         using ILoggerFactory loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
         _logger = loggerFactory.CreateLogger<Snapper>();
+
+        if (!GitIsInstalled())
+            return;
+
         if (_config.Watch)
             InitializeWatchers(_config);
+    }
+
+    private bool GitIsInstalled()
+    {
+        bool result = false;
+        try
+        {
+            result = CommandLineHelper.ExecuteCommand(".", "git", "--version").StartsWith("git version");
+        }
+        catch
+        {
+            _logger.LogError($"ConfigSnapper requires git installion!");
+        }
+        return result;
     }
 
     private void InitializeWatchers(Configuration.ConfigSnapper config)
