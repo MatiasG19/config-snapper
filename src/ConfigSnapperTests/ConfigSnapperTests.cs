@@ -1,41 +1,34 @@
-﻿using DotNet.Testcontainers.Containers;
+﻿using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
 
 namespace ConfigSnapperTests;
 
 public class ConfigSnapperTests
 {
     [Fact]
-    public async Task Test1()
+    public async Task GitInstalled()
     {
-        // Create a Testcontainer with a base image
-        var testcontainersBuilder = new TestcontainersBuilder<TestcontainersContainer>()
+        var container = new ContainerBuilder()
             .WithImage("mcr.microsoft.com/dotnet/runtime:5.0")
             .WithName("ConfigSnapper-Testcontainer")
             .WithEntrypoint("/bin/sh", "-c", "while :; do sleep 1; done")
             .WithExposedPort(80)
             .WithCleanUp(true)
-            .WithCommand("/bin/sh", "-c", "apt-get update && apt-get install -y git && while :; do sleep 1; done");
+            .WithCommand("/bin/sh", "-c", "apt-get update && apt-get install -y git && while :; do sleep 1; done")
+            .Build();
 
         // Start the Testcontainer
-        using (var testcontainer = testcontainersBuilder.Build())
-        {
-            await testcontainer.StartAsync();
-            Console.WriteLine("Testcontainer started.");
-
-            // Verify Git installation
-            var result = await ExecuteCommandInContainer(testcontainer, "git --version");
-            Console.WriteLine($"Git version: {result}");
-
-            // Keep the container running
-            Console.WriteLine("Press [enter] to exit.");
-            Console.ReadLine();
-
-        }
+        await container.StartAsync();
+        Console.WriteLine("Testcontainer started.");
 
         static async Task<string> ExecuteCommandInContainer(IContainer container, string command)
         {
             var execResult = await container.ExecAsync(new[] { "/bin/sh", "-c", command });
             return execResult.Stdout;
         }
+
+        var result = await ExecuteCommandInContainer(container, "git --version");
+
+        Assert.StartsWith("git version", result);
     }
 }

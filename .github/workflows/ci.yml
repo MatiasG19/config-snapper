@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  release:
+    types: [released, prereleased]
+
+jobs:
+  Format-Lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.x.x"
+
+      - name: Build
+        working-directory: src/ConfigSnapper
+        run: dotnet build --configuration Release
+
+      - name: Test
+        working-directory: src/ConfigSnapper
+        run: dotnet test
+
+      - name: Format
+        working-directory: src/ConfigSnapper
+        run: dotnet format --verify-no-changes
