@@ -8,26 +8,29 @@ public class ConfigSnapperTests
     [Fact]
     public async Task GitIsInstalled()
     {
-        var container = CreateContainer();
+        var container = await CreateContainer();
 
         var result = await container.ExecAsync(["git, --version"]);
 
         Assert.StartsWith("git version", result.Stdout);
     }
 
-    private IFutureDockerImage CreateImage()
+    private async Task<IFutureDockerImage> CreateImage()
     {
         Console.WriteLine("Creating image...");
-        return new ImageFromDockerfileBuilder()
+        var image = new ImageFromDockerfileBuilder()
             .WithDockerfileDirectory(CommonDirectoryPath.GetSolutionDirectory(), string.Empty)
             .WithDockerfile("Dockerfile")
             .WithDeleteIfExists(true)
             .Build();
+
+        await image.CreateAsync();
+        return image;
     }
 
-    private DotNet.Testcontainers.Containers.IContainer CreateContainer()
+    private async Task<DotNet.Testcontainers.Containers.IContainer> CreateContainer()
     {
-        var image = CreateImage();
+        var image = await CreateImage();
         Console.WriteLine("Creating container...");
         return new ContainerBuilder()
             .WithImage(image)
