@@ -19,7 +19,7 @@ public class ConfigSnapperTests
     {
         Console.WriteLine("Creating image...");
         var image = new ImageFromDockerfileBuilder()
-            .WithDockerfileDirectory(CommonDirectoryPath.GetSolutionDirectory(), string.Empty)
+            .WithDockerfileDirectory(CommonDirectoryPath.GetSolutionDirectory(), "ConfigSnapper")
             .WithDockerfile("Dockerfile")
             .WithDeleteIfExists(true)
             .Build();
