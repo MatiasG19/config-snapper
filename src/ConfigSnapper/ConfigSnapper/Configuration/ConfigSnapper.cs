@@ -16,5 +16,10 @@ public class ConfigSnapper
     public bool Backup { get; set; }
 
     public string? BackupDirectory { get; set; }
+
     public bool OpenTelemetry { get; set; }
+
+    public string? GitRemoteUrl { get; set; }
+    
+    public string GitBranch { get; set; } = "main";
 }

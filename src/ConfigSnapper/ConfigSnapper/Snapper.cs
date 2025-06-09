@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Matiasg19.ConfigSnapper;
 
-public class Snapper
+public class Snapper : IDisposable
 {
     private Configuration.ConfigSnapper _config;
     private List<FileSystemWatcher> _configWatchers = [];
@@ -19,11 +19,7 @@ public class Snapper
         _config = config.Value;
         _logger = logger;
 
-        if (!GitIsInstalled())
-            return;
-
-        if (_config.Watch)
-            InitializeWatchers(_config);
+        Init();
     }
 
     public Snapper(Configuration.ConfigSnapper config)
@@ -32,6 +28,11 @@ public class Snapper
         using ILoggerFactory loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
         _logger = loggerFactory.CreateLogger<Snapper>();
 
+        Init();
+    }
+
+    private void Init()
+    {
         if (!GitIsInstalled())
             return;
 
@@ -111,6 +112,13 @@ public class Snapper
         if (!Directory.Exists($"{context}/.git"))
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
+
+            if (!_config.GitRemoteUrl.IsNullOrEmpty())
+            {
+                CommandLineHelper.ExecuteCommand(context, "git", "remote add origin " + _config.GitRemoteUrl);
+                _logger.LogInformation($"Remote Git remote repository added.");
+            }
+
             _logger.LogInformation($"Snapshot directory initialized.");
         }
     }
@@ -135,6 +143,10 @@ public class Snapper
         {
             CommandLineHelper.ExecuteCommand(context, "git", "add .");
             CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m \"Snapshot for {sourceName}\"");
+
+            if (!_config.GitRemoteUrl.IsNullOrEmpty())
+                CommandLineHelper.ExecuteCommand(context, "git", "push origin " + _config.GitBranch);
+
             _logger.LogInformation($"Snapshot created for {sourceName}");
         }
         else
@@ -158,5 +170,20 @@ public class Snapper
         string fileExtension = Path.GetExtension(fileName);
         string date = DateTime.Now.ToString("yyyyMMdd_HHmm_ss_fff");
         File.Copy(sourcePath.GetAbsolutePath(), $"{backupPath}/{fileNameWithoutExtension}_{date}{fileExtension}");
+    }
+
+    private void PushSnapshotToGitRemote()
+    {
+        if (_config.GitRemoteUrl.IsNullOrEmpty())
+            return;
+
+        CommandLineHelper.ExecuteCommand(context, "git", "push");
+        _logger.LogInformation($"Snapshot pushed to remote repository.");
+    }
+
+    public void Dispose()
+    {
+        foreach (var watcher in _configWatchers)
+            watcher.Dispose();
     }
 }
