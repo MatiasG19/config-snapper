@@ -1,4 +1,5 @@
 ﻿using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Images;
 
 namespace ConfigSnapperTests;
@@ -28,7 +29,7 @@ public class ConfigSnapperTests
         return image;
     }
 
-    private async Task<DotNet.Testcontainers.Containers.IContainer> CreateContainer()
+    private async Task<IContainer> CreateContainer()
     {
         var image = await CreateImage();
         Console.WriteLine("Creating container...");
