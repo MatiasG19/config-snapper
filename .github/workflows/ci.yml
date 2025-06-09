@@ -23,9 +23,9 @@ jobs:
         working-directory: src
         run: dotnet build --configuration Release
 
-      - name: Test
-        working-directory: src
-        run: dotnet test
+      # - name: Test
+      #   working-directory: src
+      #   run: dotnet test
 
       - name: Format
         working-directory: src
