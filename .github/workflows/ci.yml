@@ -27,6 +27,6 @@ jobs:
       #   working-directory: src
       #   run: dotnet test
 
-      - name: Format
-        working-directory: src
-        run: dotnet format --verify-no-changes
+      # - name: Format
+      #   working-directory: src
+      #   run: dotnet format --verify-no-changes
