@@ -9,7 +9,7 @@ internal static class Extensions
 
         if (path.StartsWith("./") || path.StartsWith(".\\"))
             path = path.Substring(2);
-        return $"{AppContext.BaseDirectory}/{path}";
+        return Path.Combine(AppContext.BaseDirectory, path);
     }
 
     private static bool IsAbsolutePath(this string path)
