@@ -1,13 +1,13 @@
 ﻿using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Images;
 
 namespace ConfigSnapperTests;
 
 public class ConfigSnapperTests
 {
     [Fact]
-    public async Task GitInstalled()
+    public async Task GitIsInstalled()
     {
-        await CreateImage();
         var container = CreateContainer();
 
         var result = await container.ExecAsync(["git, --version"]);
@@ -15,25 +15,25 @@ public class ConfigSnapperTests
         Assert.StartsWith("git version", result.Stdout);
     }
 
-    private async Task CreateImage()
+    private IFutureDockerImage CreateImage()
     {
         Console.WriteLine("Creating image...");
-        var image = new ImageFromDockerfileBuilder()
+        return new ImageFromDockerfileBuilder()
             .WithDockerfileDirectory(CommonDirectoryPath.GetSolutionDirectory(), string.Empty)
             .WithDockerfile("Dockerfile")
             .WithDeleteIfExists(true)
             .WithName("ConfigSnapperTest")
             .Build();
-
-        await image.CreateAsync();
-
     }
 
     private DotNet.Testcontainers.Containers.IContainer CreateContainer()
     {
+        var image = CreateImage();
         Console.WriteLine("Creating container...");
         return new ContainerBuilder()
-            .WithImage("ConfigSnapperTest")
+            .WithImage(image)
+            .WithName("ConfigSnapperTest")
+            .WithAutoRemove(true)
             .Build();
     }
 }
