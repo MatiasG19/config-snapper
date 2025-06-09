@@ -8,7 +8,7 @@ on:
     types: [released, prereleased]
 
 jobs:
-  Format-Lint:
+  Build-And-Test:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout

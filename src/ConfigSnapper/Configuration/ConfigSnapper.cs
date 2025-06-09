@@ -20,6 +20,6 @@ public class ConfigSnapper
     public bool OpenTelemetry { get; set; }
 
     public string? GitRemoteUrl { get; set; }
-    
+
     public string GitBranch { get; set; } = "main";
 }
