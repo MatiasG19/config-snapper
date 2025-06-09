@@ -22,7 +22,6 @@ public class ConfigSnapperTests
             .WithDockerfileDirectory(CommonDirectoryPath.GetSolutionDirectory(), string.Empty)
             .WithDockerfile("Dockerfile")
             .WithDeleteIfExists(true)
-            .WithName("ConfigSnapperTest")
             .Build();
     }
 
