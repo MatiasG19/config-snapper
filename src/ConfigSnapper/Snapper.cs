@@ -76,11 +76,14 @@ public class Snapper : IDisposable
     {
         _logger.LogInformation($"ConfigSnapper starting...");
 
-        string context = _config.SnapshotDirectory is null ?
-            $"{AppContext.BaseDirectory}/{ConfigSnapperDirectoryName}" :
-            $"{_config.SnapshotDirectory.GetAbsolutePath()}/{ConfigSnapperDirectoryName}";
-
-        InitializeSnapshotDirectory(context);
+        string context = "";
+        if (string.IsNullOrEmpty(_config.SnapshotDirectory))
+            context = $"{AppContext.BaseDirectory}/{ConfigSnapperDirectoryName}";
+        else
+        {
+            context = $"{_config.SnapshotDirectory.GetAbsolutePath()}/{ConfigSnapperDirectoryName}";
+            InitializeSnapshotDirectory(context);
+        }
 
         foreach (var snapSource in _config.SnapshotSources)
         {
@@ -113,7 +116,7 @@ public class Snapper : IDisposable
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
 
-            if (!String.IsNullOrEmpty(_config.GitRemoteUrl))
+            if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
             {
                 CommandLineHelper.ExecuteCommand(context, "git", "remote add origin " + _config.GitRemoteUrl);
                 _logger.LogInformation($"Remote Git remote repository added.");
@@ -136,8 +139,11 @@ public class Snapper : IDisposable
 
     private void CreateSnapshot(string context, string sourceName, string sourcePath, string snapshotPath)
     {
-        File.Copy(sourcePath, $"{snapshotPath}/{Path.GetFileName(sourcePath)}", true);
-        _logger.LogInformation($"File for {sourceName} copied.");
+        if (!string.IsNullOrEmpty(_config.SnapshotDirectory))
+        {
+            File.Copy(sourcePath, $"{snapshotPath}/{Path.GetFileName(sourcePath)}", true);
+            _logger.LogInformation($"File for {sourceName} copied.");
+        }
 
         if (!string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", "status --porcelain")))
         {
@@ -173,7 +179,7 @@ public class Snapper : IDisposable
 
     private void PushSnapshotToGitRemote(string context)
     {
-        if (!String.IsNullOrEmpty(_config.GitRemoteUrl))
+        if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
             return;
 
         CommandLineHelper.ExecuteCommand(context, "git", "push");
