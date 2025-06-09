@@ -20,13 +20,13 @@ jobs:
           dotnet-version: "9.x.x"
 
       - name: Build
-        working-directory: src/ConfigSnapper
+        working-directory: src
         run: dotnet build --configuration Release
 
       - name: Test
-        working-directory: src/ConfigSnapper
+        working-directory: src
         run: dotnet test
 
       - name: Format
-        working-directory: src/ConfigSnapper
+        working-directory: src
         run: dotnet format --verify-no-changes
