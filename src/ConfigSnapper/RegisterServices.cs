@@ -38,6 +38,6 @@ public static class RegisterServices
 
     public static void UseConfigSnapper(this IServiceProvider serviceCollection, IConfiguration configuration)
     {
-        serviceCollection.GetService<Snapper>()?.CreateSnapshot();
+        serviceCollection.GetRequiredService<Snapper>().CreateSnapshot();
     }
 }

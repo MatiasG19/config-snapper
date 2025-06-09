@@ -5,11 +5,11 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddConfigSnapper(builder.Configuration);
 
-var h = builder.Build();
+var host = builder.Build();
 
-h.Services.UseConfigSnapper(builder.Configuration);
+host.Services.UseConfigSnapper(builder.Configuration);
 
-h.Start();
+host.Start();
 
 // Keep console running (press any key to shutdown)
 Console.ReadLine();
