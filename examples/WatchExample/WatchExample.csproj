@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\src\ConfigSnapper\ConfigSnapper\ConfigSnapper.csproj" />
+		<ProjectReference Include="..\..\src\ConfigSnapper\ConfigSnapper.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
