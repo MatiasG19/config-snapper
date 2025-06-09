@@ -113,7 +113,7 @@ public class Snapper : IDisposable
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
 
-            if (!_config.GitRemoteUrl.IsNullOrEmpty())
+            if (!String.IsNullOrEmpty(_config.GitRemoteUrl))
             {
                 CommandLineHelper.ExecuteCommand(context, "git", "remote add origin " + _config.GitRemoteUrl);
                 _logger.LogInformation($"Remote Git remote repository added.");
@@ -144,8 +144,7 @@ public class Snapper : IDisposable
             CommandLineHelper.ExecuteCommand(context, "git", "add .");
             CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m \"Snapshot for {sourceName}\"");
 
-            if (!_config.GitRemoteUrl.IsNullOrEmpty())
-                CommandLineHelper.ExecuteCommand(context, "git", "push origin " + _config.GitBranch);
+            PushSnapshotToGitRemote(context);
 
             _logger.LogInformation($"Snapshot created for {sourceName}");
         }
@@ -172,9 +171,9 @@ public class Snapper : IDisposable
         File.Copy(sourcePath.GetAbsolutePath(), $"{backupPath}/{fileNameWithoutExtension}_{date}{fileExtension}");
     }
 
-    private void PushSnapshotToGitRemote()
+    private void PushSnapshotToGitRemote(string context)
     {
-        if (_config.GitRemoteUrl.IsNullOrEmpty())
+        if (!String.IsNullOrEmpty(_config.GitRemoteUrl))
             return;
 
         CommandLineHelper.ExecuteCommand(context, "git", "push");
