@@ -48,7 +48,7 @@ public class Snapper
         }
         catch
         {
-            _logger.LogError($"ConfigSnapper requires git installion!");
+            _logger.LogError($"ConfigSnapper requires git installation!");
         }
         return result;
     }
