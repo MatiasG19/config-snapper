@@ -1,5 +1,4 @@
 ﻿using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Containers;
 
 namespace ConfigSnapperTests;
 
@@ -8,27 +7,33 @@ public class ConfigSnapperTests
     [Fact]
     public async Task GitInstalled()
     {
-        var container = new ContainerBuilder()
-            .WithImage("mcr.microsoft.com/dotnet/runtime:5.0")
-            .WithName("ConfigSnapper-Testcontainer")
-            .WithEntrypoint("/bin/sh", "-c", "while :; do sleep 1; done")
-            .WithExposedPort(80)
-            .WithCleanUp(true)
-            .WithCommand("/bin/sh", "-c", "apt-get update && apt-get install -y git && while :; do sleep 1; done")
+        await CreateImage();
+        var container = CreateContainer();
+
+        var result = await container.ExecAsync(["git, --version"]);
+
+        Assert.StartsWith("git version", result.Stdout);
+    }
+
+    private async Task CreateImage()
+    {
+        Console.WriteLine("Creating image...");
+        var image = new ImageFromDockerfileBuilder()
+            .WithDockerfileDirectory(CommonDirectoryPath.GetSolutionDirectory(), string.Empty)
+            .WithDockerfile("Dockerfile")
+            .WithDeleteIfExists(true)
+            .WithName("ConfigSnapperTest")
             .Build();
 
-        // Start the Testcontainer
-        await container.StartAsync();
-        Console.WriteLine("Testcontainer started.");
+        await image.CreateAsync();
 
-        static async Task<string> ExecuteCommandInContainer(IContainer container, string command)
-        {
-            var execResult = await container.ExecAsync(new[] { "/bin/sh", "-c", command });
-            return execResult.Stdout;
-        }
+    }
 
-        var result = await ExecuteCommandInContainer(container, "git --version");
-
-        Assert.StartsWith("git version", result);
+    private DotNet.Testcontainers.Containers.IContainer CreateContainer()
+    {
+        Console.WriteLine("Creating container...");
+        return new ContainerBuilder()
+            .WithImage("ConfigSnapperTest")
+            .Build();
     }
 }
