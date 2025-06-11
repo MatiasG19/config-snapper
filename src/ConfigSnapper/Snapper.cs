@@ -159,7 +159,7 @@ public class Snapper : IDisposable
 
     private void InitializeGit(string context)
     {
-            if (!Directory.Exists(Path.Combine(context, ".git")))
+        if (!Directory.Exists(Path.Combine(context, ".git")))
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
 
