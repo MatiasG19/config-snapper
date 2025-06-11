@@ -89,7 +89,31 @@ public class Snapper : IDisposable
     {
         _logger.LogInformation("ConfigSnapper creating snapshot...");
 
+        CreateDirectorySnapshot();
         CreateFileSnapshot();
+    }
+
+    private void CreateDirectorySnapshot()
+    {
+        if (string.IsNullOrEmpty(_config.SnapshotSourceDirectory))
+            return;
+
+        string context = _config.SnapshotSourceDirectory;
+
+        InitializeGit(context);
+
+        string directoryName = Path.GetFileName(context);
+        if (!string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", "status --porcelain")))
+        {
+            CommandLineHelper.ExecuteCommand(context, "git", "add .");
+            CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m \"Snapshot for directory {directoryName}\"");
+
+            PushSnapshotToGitRemote(context);
+
+            _logger.LogInformation($"Snapshot created for directory {directoryName}");
+        }
+        else
+            _logger.LogInformation($"No changes found for directory {directoryName}");
     }
 
     private void CreateFileSnapshot()
@@ -97,8 +121,8 @@ public class Snapper : IDisposable
         if (_config.SnapshotSourceFiles.Count == 0)
             return;
 
-        string context = string.IsNullOrEmpty(_config.SnapshotDirectory) ? 
-             Path.Combine(AppContext.BaseDirectory, ConfigSnapperDirectoryName) : 
+        string context = string.IsNullOrEmpty(_config.SnapshotDirectory) ?
+             Path.Combine(AppContext.BaseDirectory, ConfigSnapperDirectoryName) :
              Path.Combine(_config.SnapshotDirectory.GetAbsolutePath(), ConfigSnapperDirectoryName);
         InitializeSnapshotDirectory(context);
 
@@ -116,7 +140,7 @@ public class Snapper : IDisposable
             if (snapshotFileDirInitialized || !string.IsNullOrEmpty(CommandLineHelper
                 .ExecuteCommand(AppContext.BaseDirectory, "git", $"diff --no-index {sourcePath} {Path.Combine(snapshotPath, Path.GetFileName(sourcePath))}")))
             {
-                CreateSnapshot(context, snapSource.Key, sourcePath, snapshotPath);
+                CreateFileSnapshot(context, snapSource.Key, sourcePath, snapshotPath);
                 CreateBackup(sourcePath);
             }
         }
@@ -129,8 +153,13 @@ public class Snapper : IDisposable
             Directory.CreateDirectory(context);
             _logger.LogInformation($"Snapshot directory created: {context}");
         }
-        var v = Path.Combine(context, ".git");
-        if (!Directory.Exists(Path.Combine(context, ".git")))
+
+        InitializeGit(context);
+    }
+
+    private void InitializeGit(string context)
+    {
+            if (!Directory.Exists(Path.Combine(context, ".git")))
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
 
@@ -155,7 +184,7 @@ public class Snapper : IDisposable
         return false;
     }
 
-    private void CreateSnapshot(string context, string sourceName, string sourcePath, string snapshotPath)
+    private void CreateFileSnapshot(string context, string sourceName, string sourcePath, string snapshotPath)
     {
         File.Copy(sourcePath, Path.Combine(snapshotPath, Path.GetFileName(sourcePath)), true);
         _logger.LogInformation($"File for {sourceName} copied.");
