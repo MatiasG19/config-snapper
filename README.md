@@ -1,5 +1,4 @@
-[![CI/CD][ci-img]][ci-url]
-[![Issues][issue-img]][issue-url]
+[![CI](https://github.com/MatiasG19/config-snapper/actions/workflows/ci.yml/badge.svg)](https://github.com/MatiasG19/config-snapper/actions/workflows/ci.yml)
 
 <br />
 
