@@ -59,9 +59,9 @@ public class Snapper : IDisposable
 
     private bool CheckConfig()
     {
-        if (_config.SnapshotSourceFiles.Count > 0 && string.IsNullOrEmpty(_config.SnapshotSourceDirectory))
+        if (_config.SnapshotSourceFiles.Count > 0 && !string.IsNullOrEmpty(_config.SnapshotSourceDirectory))
         {
-            _logger.LogError($"Configuration error. Snapshots ca only be created for either files or a directory!");
+            _logger.LogError("Configuration error. Snapshots can only be created for either files or a directory!");
             return false;
         }
         return true;
@@ -87,7 +87,7 @@ public class Snapper : IDisposable
 
     public void CreateSnapshot()
     {
-        _logger.LogInformation($"ConfigSnapper starting...");
+        _logger.LogInformation("ConfigSnapper creating snapshot...");
 
         CreateFileSnapshot();
     }
@@ -97,14 +97,10 @@ public class Snapper : IDisposable
         if (_config.SnapshotSourceFiles.Count == 0)
             return;
 
-        string context = "";
-        if (string.IsNullOrEmpty(_config.SnapshotDirectory))
-            context = Path.Combine(AppContext.BaseDirectory, ConfigSnapperDirectoryName);
-        else
-        {
-            context = Path.Combine(_config.SnapshotDirectory.GetAbsolutePath(), ConfigSnapperDirectoryName);
-            InitializeSnapshotDirectory(context);
-        }
+        string context = string.IsNullOrEmpty(_config.SnapshotDirectory) ? 
+             Path.Combine(AppContext.BaseDirectory, ConfigSnapperDirectoryName) : 
+             Path.Combine(_config.SnapshotDirectory.GetAbsolutePath(), ConfigSnapperDirectoryName);
+        InitializeSnapshotDirectory(context);
 
         foreach (var snapSource in _config.SnapshotSourceFiles)
         {
@@ -133,6 +129,7 @@ public class Snapper : IDisposable
             Directory.CreateDirectory(context);
             _logger.LogInformation($"Snapshot directory created: {context}");
         }
+        var v = Path.Combine(context, ".git");
         if (!Directory.Exists(Path.Combine(context, ".git")))
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");

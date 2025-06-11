@@ -7,15 +7,18 @@ namespace Matiasg19.ConfigSnapper;
 
 public static class RegisterServices
 {
-    public static void AddConfigSnapper(this IServiceCollection services, IConfiguration configuration)
+    public static void AddConfigSnapper(this IServiceCollection services)
     {
         Configuration.ConfigSnapper snapperConfig = new Configuration.ConfigSnapper();
-        configuration.GetSection("ConfigSnapper").Bind(snapperConfig);
-        if (snapperConfig is null)
-        {
-            Console.WriteLine("ConfigSnapper not initialized!");
-            return;
-        }
+
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
+        configuration.GetSection(nameof(Configuration.ConfigSnapper)).Bind(snapperConfig);
+
+        services.AddOptions<Configuration.ConfigSnapper>()
+            .Bind(configuration.GetSection(nameof(Configuration.ConfigSnapper)));
 
         services.AddLogging(builder => builder.AddConsole());
 
@@ -29,8 +32,6 @@ public static class RegisterServices
             }
         }
 
-        services.AddOptions<Configuration.ConfigSnapper>()
-            .Bind(configuration.GetSection(nameof(Configuration.ConfigSnapper)));
         services.AddSingleton<Snapper>();
 
         Console.WriteLine("Service registered: ConfigSnapper");

@@ -3,10 +3,10 @@ using Microsoft.Extensions.Hosting;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddConfigSnapper(builder.Configuration);
+builder.Services.AddConfigSnapper();
 
 var host = builder.Build();
 
-host.Services.UseConfigSnapper(builder.Configuration);
-
 host.Start();
+
+host.Services.UseConfigSnapper(builder.Configuration);
