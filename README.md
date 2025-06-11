@@ -11,11 +11,9 @@
 <h3 align="center" style="display: flex; justify-content: center; align-items: center;">Config Snapper</h3>
 
 <div align="center" style="justify-content: center; align-items: center;">
-  <p>Create automatic snapshots of configuration files (or any other file). No more lost configurations files, manual backups and painful rollbacks. Config Snapper helps you to keep track of your configuration changes.</p>
-  <p>Under the hood Config Snapper uses git to create a snapshot history und uses file system watchers to watch every file change.</p>
+  <p>Create automatic snapshots of configuration files (or any other file) or directories. No more lost configurations, manual backups and painful rollbacks. Config Snapper helps you to keep track of your configuration changes.</p>
+  <p>Under the hood Config Snapper uses Git to create a snapshot history und uses file system watchers to watch every file change.</p>
 </div>
-
-
 
 ## Features
 
