@@ -19,16 +19,16 @@ RUN apt-get update \
     clang zlib1g-dev git
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ConfigSnapperExample/ConfigSnapperExample.csproj", "ConfigSnapperExample/"]
-RUN dotnet restore "./ConfigSnapperExample/ConfigSnapperExample.csproj"
+COPY ["ConfigSnapperConsole/ConfigSnapperConsole.csproj", "ConfigSnapperConsole/"]
+RUN dotnet restore "./ConfigSnapperConsole/ConfigSnapperConsole.csproj"
 COPY . .
-WORKDIR "/src/ConfigSnapperExample"
-RUN dotnet build "./ConfigSnapperExample.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/ConfigSnapperConsole"
+RUN dotnet build "./ConfigSnapperConsole.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Diese Stufe wird verwendet, um das Dienstprojekt zu veröffentlichen, das in die letzte Phase kopiert werden soll.
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./ConfigSnapperExample.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=true
+RUN dotnet publish "./ConfigSnapperConsole.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=true
 
 # Diese Stufe wird als Basis für die letzte Stufe verwendet, wenn sie von VS gestartet wird, um das Debuggen im regulären Modus zu unterstützen (Standardwert, wenn die Debugkonfiguration nicht verwendet wird).
 FROM base AS aotdebug
@@ -43,4 +43,4 @@ USER app
 FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:9.0} AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["./ConfigSnapperExample"]
+ENTRYPOINT ["./ConfigSnapperConsole"]
