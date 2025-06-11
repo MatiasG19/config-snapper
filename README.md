@@ -39,14 +39,17 @@
 **Example configuration:**
 ```json
   "ConfigSnapper": {
-    "SnapshotSources": {
+    "SnapshotSourceFiles": {
       "Test": "C:\\Users\\Snapper\\appSettings.json"
     },
+    "SnapshotSourceDirectory": null,
     "SnapshotDirectory": "C:\\Users\\Snapper",
     "Watch": true,
     "Backup": true,
     "BackupDirectory": "C:\\Users\\Snapper",
-    "OpenTelemetry":  true
+    "OpenTelemetry":  true,
+    "GitRemoteUrl": "https://github.com/MatiasG19/my-repo.git",
+    "GitBranch": "main"
 ```
 
 ## Store Git remote credentials
