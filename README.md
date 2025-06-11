@@ -49,3 +49,24 @@
     "BackupDirectory": "C:\\Users\\Snapper",
     "OpenTelemetry":  true
 ```
+
+## Store Git remote credentials
+
+1. Execute to use GCM to store credentials for repository:
+
+```sh
+git config credential.helper store
+```
+
+2. Login to GitHub (or whatever) once, by pushing changes once. This way credentials will be stored for future pushes.
+
+```sh
+git push origin <branch_name>
+```
+
+3. It might me necessary to rebase:
+
+```sh
+git pull --rebase origin main
+
+```

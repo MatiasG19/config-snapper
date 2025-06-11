@@ -223,12 +223,10 @@ public class Snapper : IDisposable
 
     private void PushSnapshotToGitRemote(string context)
     {
-        if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
+        if (string.IsNullOrEmpty(_config.GitRemoteUrl))
             return;
 
-        var res = CommandLineHelper.ExecuteCommand(context, "git", "push origin " + _config.GitBranch);
-        // TODO remove debug
-        Console.WriteLine("PushSnapshotToGitRemote result: " + res);
+        CommandLineHelper.ExecuteCommand(context, "git", "push origin " + _config.GitBranch);
         _logger.LogInformation($"Snapshot pushed to remote repository.");
     }
 

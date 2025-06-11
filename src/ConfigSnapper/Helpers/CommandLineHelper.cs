@@ -24,8 +24,8 @@ internal static class CommandLineHelper
         string error = process.StandardError.ReadToEnd();
         process.WaitForExit();
 
-        if (!string.IsNullOrWhiteSpace(error))
-            throw new CommandExecutionException($"Error executing command: {command} {arguments}");
+        if (process.ExitCode != 0)
+            throw new CommandExecutionException($"Error executing command: {command} {arguments}:\n{error}");
 
         return result;
     }
