@@ -13,7 +13,7 @@ public static class RegisterServices
     {
         Configuration.ConfigSnapper snapperConfig = new Configuration.ConfigSnapper();
 
-        string appSettingsPath = pathToAppSettings is not null ? 
+        string appSettingsPath = pathToAppSettings is not null ?
             Path.Combine(pathToAppSettings, appSettings) :
             appSettings;
 
