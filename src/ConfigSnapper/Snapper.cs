@@ -159,7 +159,7 @@ public class Snapper : IDisposable
 
     private void InitializeGit(string context)
     {
-        const bool gitRepoExists = Directory.Exists(Path.Combine(context, ".git"));
+        bool gitRepoExists = Directory.Exists(Path.Combine(context, ".git"));
         if (!gitRepoExists)
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
