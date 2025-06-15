@@ -13,6 +13,7 @@ public class Snapper : IDisposable
 
     private const string ConfigSnapperDirectoryName = "ConfigSnapperSnapshots";
     private const string BackupDirectoryName = "ConfigSnapperBackups";
+    private const string GitRemoteName = "origin";
 
     public Snapper(IOptions<Configuration.ConfigSnapper> config, ILogger<Snapper> logger)
     {
@@ -168,7 +169,7 @@ public class Snapper : IDisposable
 
         if (gitRepoExists && !string.IsNullOrEmpty(_config.GitRemoteUrl))
         {
-            CommandLineHelper.ExecuteCommand(context, "git", "remote add origin " + _config.GitRemoteUrl);
+            CommandLineHelper.ExecuteCommand(context, "git", $"remote add {GitRemoteName} {_config.GitRemoteUrl}");
             _logger.LogInformation($"Remote Git remote repository added.");
         }
     }
@@ -226,7 +227,7 @@ public class Snapper : IDisposable
         if (string.IsNullOrEmpty(_config.GitRemoteUrl))
             return;
 
-        CommandLineHelper.ExecuteCommand(context, "git", "push origin " + _config.GitBranch);
+        CommandLineHelper.ExecuteCommand(context, "git", $"push {GitRemoteName} {_config.GitBranch}");
         _logger.LogInformation($"Snapshot pushed to remote repository.");
     }
 
