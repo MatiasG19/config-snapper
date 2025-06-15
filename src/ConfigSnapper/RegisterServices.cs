@@ -7,12 +7,18 @@ namespace Matiasg19.ConfigSnapper;
 
 public static class RegisterServices
 {
-    public static void AddConfigSnapper(this IServiceCollection services)
+    private static string appSettings = "appSettings.json";
+
+    public static void AddConfigSnapper(this IServiceCollection services, string? pathToAppSettings = null)
     {
         Configuration.ConfigSnapper snapperConfig = new Configuration.ConfigSnapper();
 
+        string appSettingsPath = pathToAppSettings is not null ? 
+            Path.Combine(pathToAppSettings, appSettings) :
+            appSettings;
+
         var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile(appSettingsPath, optional: false, reloadOnChange: true)
             .Build();
 
         configuration.GetSection(nameof(Configuration.ConfigSnapper)).Bind(snapperConfig);

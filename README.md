@@ -23,6 +23,12 @@
 - Open Telemetry support
 - Available as standalone console app or as nuget integration
 
+## Usage
+
+### Command line
+
+`./ConfigSnapperConsole <optional_path_to_appSettings>`
+
 ## Configuration
 
 | Property          | Description                                                                                                                                              |
@@ -35,6 +41,7 @@
 | OpenTelemetry     | Open Telemetry is enabled when set to `true`.                                                                                                            |
 
 **Example configuration:**
+
 ```json
   "ConfigSnapper": {
     "SnapshotSourceFiles": {
