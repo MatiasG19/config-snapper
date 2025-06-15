@@ -159,17 +159,17 @@ public class Snapper : IDisposable
 
     private void InitializeGit(string context)
     {
-        if (!Directory.Exists(Path.Combine(context, ".git")))
+        const bool gitRepoExists = Directory.Exists(Path.Combine(context, ".git"));
+        if (!gitRepoExists)
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
-
-            if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
-            {
-                CommandLineHelper.ExecuteCommand(context, "git", "remote add origin " + _config.GitRemoteUrl);
-                _logger.LogInformation($"Remote Git remote repository added.");
-            }
-
             _logger.LogInformation($"Snapshot directory initialized.");
+        }
+
+        if (gitRepoExists && !string.IsNullOrEmpty(_config.GitRemoteUrl))
+        {
+            CommandLineHelper.ExecuteCommand(context, "git", "remote add origin " + _config.GitRemoteUrl);
+            _logger.LogInformation($"Remote Git remote repository added.");
         }
     }
 
