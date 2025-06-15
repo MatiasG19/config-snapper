@@ -16,7 +16,7 @@ jobs:
         with:
           dotnet-version: "9.x.x"
 
-      - name: Package
+      - name: Publish
         working-directory: src/ConfigSnapperConsole
         run: dotnet publish -r linux-x64 -p:PublishSingleFile=true --self-contained true -o bin/Release/linux-x64
 
@@ -30,6 +30,6 @@ jobs:
         run: mv ConfigSnapperConsole $(echo ${{ github.event.repository.name }}-linux-x64-${{ github.ref_name }};)
 
       - name: Append to release
-        run: gh release upload ${{ env.TAG }} upload/*
+        run: gh release upload ${{ github.ref_name }} upload/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
