@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - '**'
-  release:
-    types: [released, prereleased]
 
 jobs:
   Build-And-Test:
