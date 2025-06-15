@@ -27,7 +27,7 @@ jobs:
 
       - name: Rename
         working-directory: upload
-        run: mv ConfigSnapperConsole $(echo ${{ github.event.repository.name }}-linux-x64-${{ github.ref_name }};)
+        run: mv ConfigSnapperConsole $(echo ${{ github.event.repository.name }}_linux-x64_${{ github.ref_name }};)
 
       - name: Append to release
         run: gh release upload ${{ github.ref_name }} upload/*
