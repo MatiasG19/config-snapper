@@ -9,6 +9,8 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<Platforms>AnyCPU;x64</Platforms>
 		<EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+		<PublishSingleFile>true</PublishSingleFile>
+    	<SelfContained>true</SelfContained>
 	</PropertyGroup>
 
 	<ItemGroup>

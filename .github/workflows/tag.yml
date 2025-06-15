@@ -1,0 +1,35 @@
+name: Tag
+
+on:
+  release:
+    types: [released, prereleased]
+
+jobs:
+  release-deb:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.x.x"
+
+      - name: Package
+        working-directory: src/ConfigSnapperConsole
+        run: dotnet publish -r linux-x64 -p:PublishSingleFile=true --self-contained true -o bin/Release/linux-x64
+
+      - name: Move to upload directory
+        run: |
+          mkdir upload
+          cp src/ConfigSnapperConsole/bin/Release/linux-x64/ConfigSnapperConsole upload/ConfigSnapperConsole
+
+      - name: Rename
+        working-directory: upload
+        run: mv ConfigSnapperConsole $(echo ${{ github.event.repository.name }}-linux-x64-${{ github.ref_name }};)
+
+      - name: Append to release
+        run: gh release upload ${{ env.TAG }} upload/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
