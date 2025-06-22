@@ -12,9 +12,10 @@ jobs:
         include:
           - os: ubuntu-24.04
             arch: amd64
+            runtime: linux-x64
           - os: ubuntu-22.04-arm
             arch: arm64
-        runtime: [linux-x64, linux-arm64]
+            runtime: linux-arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
