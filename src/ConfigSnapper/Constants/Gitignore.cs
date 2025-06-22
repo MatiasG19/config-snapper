@@ -62,5 +62,5 @@ public class Resources
         # Password files
         shadow
         shadow-
-        """
+        """;
 }
