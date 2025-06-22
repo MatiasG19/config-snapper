@@ -7,6 +7,9 @@ on:
 jobs:
   release-deb:
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        runtime: [linux-x64, linux-arm64]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,16 +21,16 @@ jobs:
 
       - name: Publish
         working-directory: src/ConfigSnapperConsole
-        run: dotnet publish -r linux-x64 -p:PublishSingleFile=true --self-contained true -o bin/Release/linux-x64
+        run: dotnet publish -r ${{ matrix.runtime }} -p:PublishSingleFile=true --self-contained true -o bin/Release/${{ matrix.runtime }}
 
       - name: Move to upload directory
         run: |
-          mkdir upload
-          cp src/ConfigSnapperConsole/bin/Release/linux-x64/ConfigSnapperConsole upload/ConfigSnapperConsole
+          mkdir -p upload/${{ matrix.runtime }}
+          cp src/ConfigSnapperConsole/bin/Release/${{ matrix.runtime }}/ConfigSnapperConsole upload/${{ matrix.runtime }}/ConfigSnapperConsole
 
       - name: Rename
         working-directory: upload
-        run: mv ConfigSnapperConsole $(echo ${{ github.event.repository.name }}_linux-x64_${{ github.ref_name }};)
+        run: mv ConfigSnapperConsole $(echo ${{ github.event.repository.name }}_${{ matrix.runtime }}_${{ github.ref_name }};)
 
       - name: Append to release
         run: gh release upload ${{ github.ref_name }} upload/*
