@@ -30,9 +30,9 @@ jobs:
 
       - name: Rename
         working-directory: upload/${{ matrix.runtime }}
-        run: mv ConfigSnapperConsole $(echo ${{ github.event.repository.name }}_${{ matrix.runtime }}_${{ github.ref_name }};)
+        run: mv ConfigSnapperConsole $(echo ${{ github.event.repository.name }}_${{ github.ref_name }}_${{ matrix.runtime }};)
 
       - name: Append to release
-        run: gh release upload ${{ github.ref_name }} upload//${{ matrix.runtime }}/*
+        run: gh release upload ${{ github.ref_name }} upload/${{ matrix.runtime }}/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
