@@ -165,7 +165,7 @@ public class Snapper : IDisposable
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
 
-            // TODO Create gitignore
+            CreateGitignore(context);
 
             if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
             {
@@ -174,6 +174,16 @@ public class Snapper : IDisposable
             }
 
             _logger.LogInformation($"Snapshot directory initialized.");
+        }
+    }
+
+    private void CreateGitignore(string context) 
+    {
+        string filePath = Path.Combine(context, ".gitignore");
+        if(!Path.Directory.Exists(filePath)) 
+        {
+            File.WriteAllText(filePath, Constants.Resources.Gitignore);
+        _   logger.LogInformation($"Gitignore created.");
         }
     }
 
