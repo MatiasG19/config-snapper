@@ -31,16 +31,16 @@
 
 ## Configuration
 
-| Property          | Description                                                                                                                                               |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SnapshotSources   | Key-Values of the files to keep snapshots (and backups) of. The key can be any name. The value is the path to the file.                                   |
-| SnapshotDirectory | Relative or absolute path for the snapshot directory. Leave `null` create the snapshot directory in the application root directory.                       |
-| Watch             | By default Config Snapper creates snapshots (and backups) on application startup. With `Watch` set to `true` all file changes are registered immediately. |
-| Backup            | When set to `true`, individual file Backups are created. Each backup file receives a timestamp in the filename.                                           |
-| BackupDirectory   | Relative or absolute path for file backups. Leave `null` to store Backups in the same directory of the source file.                                       |
-| OpenTelemetry     | Open Telemetry is enabled when set to `true`.                                                                                                             |
-| GitRemoteUrl      | Git remote url, e.g. `https://github.com/MatiasG19/test-config-snapper.git`.                                                                              |
-| GitBranch         | Git remote branch name, default `main`.                                                                                                                   |
+| Property          | Description                                                                                                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SnapshotSources   | Key-Values of the files to keep snapshots (and backups) of. The key can be any name. The value is the path to the file.                                                          |
+| SnapshotDirectory | Relative or absolute path for the snapshot directory. Leave `null` create the snapshot directory in the application root directory.                                              |
+| Watch             | By default Config Snapper creates snapshots (and backups) on application startup. With `Watch` set to `true` all file changes are registered immediately.                        |
+| Backup            | When set to `true`, individual file Backups are created. Each backup file receives a timestamp in the filename.                                                                  |
+| BackupDirectory   | Relative or absolute path for file backups. Leave `null` to store Backups in the same directory of the source file.                                                              |
+| OpenTelemetry     | Open Telemetry is enabled when set to `true`.                                                                                                                                    |
+| GitRemoteUrl      | Git remote url, e.g. `https://github.com/MatiasG19/test-config-snapper.git`. Remote can be only added when `.git` repository is initialized, otherwise it has be added manually. |
+| GitBranch         | Git remote branch name, default `main`.                                                                                                                                          |
 
 **Example configuration:**
 

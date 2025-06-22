@@ -164,13 +164,14 @@ public class Snapper : IDisposable
         if (!gitRepoExists)
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
-            _logger.LogInformation($"Snapshot directory initialized.");
-        }
 
-        if (gitRepoExists && !string.IsNullOrEmpty(_config.GitRemoteUrl))
-        {
-            CommandLineHelper.ExecuteCommand(context, "git", $"remote add {GitRemoteName} {_config.GitRemoteUrl}");
-            _logger.LogInformation($"Remote Git remote repository added.");
+            if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
+            {
+                CommandLineHelper.ExecuteCommand(context, "git", $"remote add {GitRemoteName} {_config.GitRemoteUrl}");
+                _logger.LogInformation($"Remote Git remote repository added.");
+            }
+
+            _logger.LogInformation($"Snapshot directory initialized.");
         }
     }
 
