@@ -57,5 +57,10 @@ public class Resources
         \#*\#
         DEADJOE
 
+        # etckeeper end
+
+        # Password files
+        shadow
+        shadow-
         """
 }
