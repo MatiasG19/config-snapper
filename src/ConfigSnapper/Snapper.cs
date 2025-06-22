@@ -191,7 +191,7 @@ public class Snapper : IDisposable
         if(!Directory.Exists(filePath)) 
         {
             File.WriteAllText(filePath, Constants.Resources.Gitignore);
-        _   logger.LogInformation($"Gitignore created.");
+            _logger.LogInformation("Gitignore created.");
         }
     }
 
