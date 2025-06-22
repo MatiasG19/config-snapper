@@ -165,6 +165,8 @@ public class Snapper : IDisposable
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
 
+            // TODO Create gitignore
+
             if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
             {
                 CommandLineHelper.ExecuteCommand(context, "git", $"remote add {GitRemoteName} {_config.GitRemoteUrl}");
