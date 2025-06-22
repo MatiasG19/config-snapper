@@ -188,7 +188,7 @@ public class Snapper : IDisposable
     private void CreateGitignore(string context) 
     {
         string filePath = Path.Combine(context, ".gitignore");
-        if(!Path.Directory.Exists(filePath)) 
+        if(!Directory.Exists(filePath)) 
         {
             File.WriteAllText(filePath, Constants.Resources.Gitignore);
         _   logger.LogInformation($"Gitignore created.");
