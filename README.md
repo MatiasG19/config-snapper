@@ -76,3 +76,55 @@ git config credential.helper store
 ```sh
 git push origin <branch_name>
 ```
+
+## Install as systemd service
+
+Create service:
+
+```sh
+sudo nano /etc/systemd/system/config-snapper.service
+```
+
+```sh
+[Unit]
+Description=Config Snapper at Startup
+
+[Service]
+ExecStartPre=/bin/sleep 300 # Delay for 5 minutes
+ExecStart=/usr/bin/sudo /path/to/your/config-snapper
+Type=simple
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
+```
+
+Reload daemon:
+
+```sh
+sudo systemctl daemon-reload
+```
+
+Add script to sudoers, to be able to execute it without password:
+
+```sh
+sudo visudo
+```
+
+```sh
+root ALL=(ALL) NOPASSWD: /path/to/your/config-snapper
+```
+
+Enable and verify service:
+
+```sh
+sudo systemctl enable config-snapper.service
+sudo systemctl status config-snapper.service
+```
+
+Test run script:
+
+```sh
+sudo systemctl start config-snapper.service
+```
