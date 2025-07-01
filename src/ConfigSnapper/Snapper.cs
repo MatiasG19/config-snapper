@@ -164,7 +164,7 @@ public class Snapper : IDisposable
         if (!gitRepoExists)
         {
             CommandLineHelper.ExecuteCommand(context, "git", "init");
-            
+
             AddGitSafeDirectory();
 
             CreateGitignore(context);
@@ -179,16 +179,16 @@ public class Snapper : IDisposable
         }
     }
 
-    private void AddGitSafeDirectory() 
+    private void AddGitSafeDirectory()
     {
-        if(_config.SnapshotSourceDirectory is not null)
+        if (_config.SnapshotSourceDirectory is not null)
             CommandLineHelper.ExecuteCommand(".", "git", $"config --add safe.directory {_config.SnapshotSourceDirectory}");
     }
 
-    private void CreateGitignore(string context) 
+    private void CreateGitignore(string context)
     {
         string filePath = Path.Combine(context, ".gitignore");
-        if(!Directory.Exists(filePath)) 
+        if (!Directory.Exists(filePath))
         {
             File.WriteAllText(filePath, Constants.Resources.Gitignore);
             _logger.LogInformation("Gitignore created.");
