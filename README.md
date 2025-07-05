@@ -94,6 +94,7 @@ ExecStartPre=/bin/sleep 300 # Delay for 5 minutes
 ExecStart=/usr/bin/sudo /path/to/your/config-snapper
 Type=simple
 User=root
+TimeoutStartSec=350s
 
 [Install]
 WantedBy=multi-user.target
