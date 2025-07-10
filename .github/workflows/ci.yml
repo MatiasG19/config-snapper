@@ -5,11 +5,12 @@ on:
     branches:
       - '**'
 
+env:
+  DOTNET_INSTALL_DIR: '.\.dotnet'
+
 jobs:
   build-test-format:
     runs-on: ubuntu-24.04
-    env:
-      DOTNET_INSTALL_DIR: '.\.dotnet'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,9 +31,12 @@ jobs:
           cache: true
           cache-dependency-path: "**/packages.lock.json"
 
+      - name: Restore
+        run: dotnet restore --locked-mode
+
       - name: Build
         working-directory: src
-        run: dotnet build --locked-mode
+        run: dotnet build --no-restore 
 
       # - name: Test
       #   working-directory: src
@@ -41,7 +45,6 @@ jobs:
       - name: Format
         working-directory: src
         run: dotnet format --verify-no-changes
-
 
   publish:
     runs-on: ubuntu-24.04
@@ -64,7 +67,11 @@ jobs:
         with:
           dotnet-version: "9.x.x"
           cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Restore
+        run: dotnet restore --locked-mode
 
       - name: Publish
         working-directory: src/ConfigSnapperConsole
-        run: dotnet publish -r linux-x64 -p:PublishSingleFile=true --self-contained true -o bin/Release/linux-x64
+        run: dotnet publish --no-restore -r linux-x64 -p:PublishSingleFile=true --self-contained true -o bin/Release/linux-x64
