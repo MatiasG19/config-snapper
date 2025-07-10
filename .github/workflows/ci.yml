@@ -28,10 +28,11 @@ jobs:
         with:
           dotnet-version: "9.x.x"
           cache: true
+          cache-dependency-path: "**/packages.lock.json"
 
       - name: Build
         working-directory: src
-        run: dotnet build
+        run: dotnet build --locked-mode
 
       # - name: Test
       #   working-directory: src
