@@ -29,8 +29,8 @@ jobs:
         if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
         with:
           dotnet-version: "9.0.x"
-          cache: true
-          cache-dependency-path: "**/packages.lock.json"
+          # cache: true
+          # cache-dependency-path: "**/packages.lock.json"
 
       - name: Restore
         working-directory: src
@@ -68,8 +68,8 @@ jobs:
         if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
         with:
           dotnet-version: "9.0.x"
-          cache: true
-          cache-dependency-path: "**/packages.lock.json"
+          # cache: true
+          # cache-dependency-path: "**/packages.lock.json"
 
       - name: Restore
         working-directory: src
