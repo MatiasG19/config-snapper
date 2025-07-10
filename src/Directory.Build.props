@@ -1,0 +1,13 @@
+<Project>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<!--<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>-->
+		<OutputPath>$(SolutionDir)\bin\$(Configuration)</OutputPath>
+		<PublishDir>$(OutputPath)\publish</PublishDir>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+	</PropertyGroup>
+</Project>
