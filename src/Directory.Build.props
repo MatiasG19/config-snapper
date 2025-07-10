@@ -4,7 +4,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Platforms>AnyCPU</Platforms>
-		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+		<!--<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>-->
 		<OutputPath>$(SolutionDir)\bin\$(Configuration)</OutputPath>
 		<PublishDir>$(OutputPath)\publish</PublishDir>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

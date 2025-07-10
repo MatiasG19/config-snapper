@@ -381,8 +381,6 @@
           "OpenTelemetry.Instrumentation.Http": "[1.12.0, )"
         }
       }
-    },
-    "net9.0/linux-x64": {},
-    "net9.0/win-x64": {}
+    }
   }
 }
