@@ -11,6 +11,7 @@
 		<EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
 		<PublishSingleFile>true</PublishSingleFile>
     	<SelfContained>true</SelfContained>
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
 
 	<ItemGroup>
