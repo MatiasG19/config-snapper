@@ -8,14 +8,26 @@ on:
 jobs:
   build-test-format:
     runs-on: ubuntu-24.04
+    env:
+      DOTNET_INSTALL_DIR: '.\.dotnet'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache dotnet
+        id: cache-dotnet
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DOTNET_INSTALL_DIR }}
+          key: ${{ runner.os }}-dotnet-9
+          restore-keys: ${{ runner.os }}-dotnet-9
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
+        if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
         with:
           dotnet-version: "9.x.x"
+          cache: true
 
       - name: Build
         working-directory: src
@@ -37,10 +49,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache dotnet
+        id: cache-dotnet
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DOTNET_INSTALL_DIR }}
+          key: ${{ runner.os }}-dotnet-9
+          restore-keys: ${{ runner.os }}-dotnet-9
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
+        if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
         with:
           dotnet-version: "9.x.x"
+          cache: true
 
       - name: Publish
         working-directory: src/ConfigSnapperConsole
