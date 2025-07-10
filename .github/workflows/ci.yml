@@ -27,7 +27,7 @@ jobs:
 
       - name: Format
         working-directory: src
-        run: dotnet format --verify-no-changes --settings ../.editorconfig
+        run: dotnet format --verify-no-changes
 
 
   publish:
