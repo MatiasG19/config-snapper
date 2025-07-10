@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<Platforms>AnyCPU</Platforms>
 		<!--<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>-->
-		<OutputPath>.\bini\$(Configuration)</OutputPath>
+		<OutputPath>.\bin\$(Configuration)</OutputPath>
 		<PublishDir>$(OutputPath)\publish</PublishDir>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
