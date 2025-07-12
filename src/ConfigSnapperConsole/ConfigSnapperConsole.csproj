@@ -7,7 +7,6 @@
 		<EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>true</SelfContained>
-		
 	</PropertyGroup>
 
 	<ItemGroup>

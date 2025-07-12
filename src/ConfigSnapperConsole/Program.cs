@@ -1,12 +1,19 @@
 ﻿using Matiasg19.ConfigSnapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
+var configFile = new ConfigurationBuilder()
+    .AddJsonFile("appSettings.json", optional: true, reloadOnChange: false)
+    .Build();
+
+builder.Logging.ClearProviders();
 builder.Services.AddSerilog(config =>
 {
-    config.ReadFrom.Configuration(builder.Configuration);
+    config.ReadFrom.Configuration(configFile);
 });
 
 string[] arguments = Environment.GetCommandLineArgs();
