@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
-using Matiasg19.ConfigSnapper;
+﻿using Matiasg19.ConfigSnapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Sinks.SystemConsole;
-using Serilog.Sinks.File;
 using OpenTelemetry;
-using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Sinks.File;
+using Serilog.Sinks.SystemConsole;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
@@ -20,7 +20,7 @@ var configFile = new ConfigurationBuilder()
     .AddJsonFile(appSettingsPath, optional: false, reloadOnChange: false)
     .Build();
 
-Matiasg19.ConfigSnapper.Configuration.ConfigSnapper snapperConfig = new ();
+Matiasg19.ConfigSnapper.Configuration.ConfigSnapper snapperConfig = new();
 configFile.GetSection(nameof(Matiasg19.ConfigSnapper.Configuration.ConfigSnapper)).Bind(snapperConfig);
 
 builder.Services.AddOptions<Matiasg19.ConfigSnapper.Configuration.ConfigSnapper>()
