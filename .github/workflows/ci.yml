@@ -15,17 +15,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # - name: Cache dotnet
-      #   id: cache-dotnet
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ${{ env.DOTNET_INSTALL_DIR }}
-      #     key: ${{ runner.os }}-dotnet-9
-      #     restore-keys: ${{ runner.os }}-dotnet-9
+      - name: Cache dotnet
+        id: cache-dotnet
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DOTNET_INSTALL_DIR }}
+          key: ${{ runner.os }}-dotnet-9
+          restore-keys: ${{ runner.os }}-dotnet-9
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
-        # if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
         with:
           dotnet-version: "9.0.x"
           # cache: true
@@ -54,17 +53,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # - name: Cache dotnet
-      #   id: cache-dotnet
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ${{ env.DOTNET_INSTALL_DIR }}
-      #     key: ${{ runner.os }}-dotnet-9
-      #     restore-keys: ${{ runner.os }}-dotnet-9
+      - name: Cache dotnet
+        id: cache-dotnet
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DOTNET_INSTALL_DIR }}
+          key: ${{ runner.os }}-dotnet-9
+          restore-keys: ${{ runner.os }}-dotnet-9
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
-        # if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
         with:
           dotnet-version: "9.0.x"
           # cache: true
@@ -74,10 +72,6 @@ jobs:
         working-directory: src
         run: dotnet restore
 
-      - name: Restore
-        working-directory: src
-        run: dotnet build --no-restore
-
       - name: Publish
         working-directory: src/ConfigSnapperConsole
-        run: dotnet publish --no-build -r linux-x64 -p:PublishSingleFile=true --self-contained true /p:NativeAot=true -o bin/Release/linux-x64
+        run: dotnet publish --no-restore -r linux-x64 -p:PublishSingleFile=true --self-contained true /p:NativeAot=true -o bin/Release/linux-x64
