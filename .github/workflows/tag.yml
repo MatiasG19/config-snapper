@@ -27,7 +27,7 @@ jobs:
 
       - name: Publish
         working-directory: src/ConfigSnapperConsole
-        run: dotnet publish -r ${{ matrix.runtime }} -p:Version=${{ github.ref_name }} -p:PublishSingleFile=true --self-contained true -o bin/Release/${{ matrix.runtime }}
+        run: dotnet publish -r ${{ matrix.runtime }} -p:Version=${{ github.ref_name }} -p:PublishSingleFile=true --self-contained true /p:NativeAot=true -o bin/Release/${{ matrix.runtime }}
 
       - name: Move to upload directory
         run: |
