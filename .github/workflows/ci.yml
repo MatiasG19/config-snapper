@@ -76,4 +76,4 @@ jobs:
 
       - name: Publish
         working-directory: src/ConfigSnapperConsole
-        run: dotnet publish --no-restore -r linux-x64 -p:PublishSingleFile=true --self-contained true -o bin/Release/linux-x64
+        run: dotnet publish --no-restore -r linux-x64 -p:PublishSingleFile=true --self-contained true /p:NativeAot=true -o bin/Release/linux-x64
