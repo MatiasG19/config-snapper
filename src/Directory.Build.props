@@ -9,6 +9,6 @@
 		<PublishDir>$(OutputPath)\publish</PublishDir>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
 	</PropertyGroup>
 </Project>
