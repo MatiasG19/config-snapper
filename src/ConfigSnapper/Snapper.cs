@@ -164,11 +164,9 @@ public class Snapper : IDisposable
         bool gitRepoExists = Directory.Exists(Path.Combine(context, ".git"));
         if (!gitRepoExists)
         {
-            CommandLineHelper.ExecuteCommand(context, "git", "init");
-
-            AddGitSafeDirectory();
-
             CreateGitignore(context);
+            AddGitSafeDirectory();
+            CommandLineHelper.ExecuteCommand(context, "git", "init");
 
             if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
             {
