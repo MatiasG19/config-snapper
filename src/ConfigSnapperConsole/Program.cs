@@ -5,8 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Serilog;
-using Serilog.Sinks.File;
-using Serilog.Sinks.SystemConsole;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 

@@ -440,11 +440,7 @@
       "configsnapper": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "[9.0.7, )",
-          "Microsoft.Extensions.Logging": "[9.0.7, )",
-          "Microsoft.Extensions.Logging.Console": "[9.0.7, )",
-          "Microsoft.Extensions.Options": "[9.0.7, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[9.0.7, )"
+          "Microsoft.Extensions.Logging.Console": "[9.0.7, )"
         }
       }
     },
