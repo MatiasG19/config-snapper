@@ -165,7 +165,7 @@ public class Snapper : IDisposable
         if (!gitRepoExists)
         {
             CreateGitignore(context);
-            AddGitSafeDirectory();
+            AddGitSafeDirectory(context);
             CommandLineHelper.ExecuteCommand(context, "git", "init");
 
             _logger.LogInformation($"Snapshot directory initialized.");
@@ -183,10 +183,10 @@ public class Snapper : IDisposable
         return !string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", $"remote | grep {GitRemoteName}"));
     }
 
-    private void AddGitSafeDirectory()
+    private void AddGitSafeDirectory(string context)
     {
         if (_config.SnapshotSourceDirectory is not null)
-            CommandLineHelper.ExecuteCommand(_config.SnapshotSourceDirectory, "git", $"config --global --add safe.directory {_config.SnapshotSourceDirectory}");
+            CommandLineHelper.ExecuteCommand(context, "git", $"config --global --add safe.directory {context}");
     }
 
     private void CreateGitignore(string context)
