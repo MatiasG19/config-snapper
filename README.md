@@ -92,13 +92,31 @@ Description=Config Snapper at Startup
 [Service]
 ExecStartPre=/bin/sleep 300 # Delay for 5 minutes
 ExecStart=/usr/bin/sudo /path/to/your/config-snapper
-Type=simple
+Type=oneshot
 User=root
 TimeoutStartSec=350s
 
 [Install]
 WantedBy=multi-user.target
 
+```
+
+Create timer:
+
+```sh
+sudo nano /etc/systemd/system/config-snapper.timer
+```
+
+```sh
+[Unit]
+Description=Run Config Snapper every Tuesday at 4 AM
+
+[Timer]
+OnCalendar=Tue *-*-* 04:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
 ```
 
 Reload daemon:
