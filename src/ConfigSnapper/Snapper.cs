@@ -168,14 +168,19 @@ public class Snapper : IDisposable
             AddGitSafeDirectory();
             CommandLineHelper.ExecuteCommand(context, "git", "init");
 
-            if (!string.IsNullOrEmpty(_config.GitRemoteUrl))
-            {
-                CommandLineHelper.ExecuteCommand(context, "git", $"remote add {GitRemoteName} {_config.GitRemoteUrl}");
-                _logger.LogInformation($"Remote Git remote repository added.");
-            }
-
             _logger.LogInformation($"Snapshot directory initialized.");
         }
+
+        if (!gitRepoExists && !string.IsNullOrEmpty(_config.GitRemoteUrl) && !CheckIfRemoteExists(context))
+        {
+            CommandLineHelper.ExecuteCommand(context, "git", $"remote add {GitRemoteName} {_config.GitRemoteUrl}");
+            _logger.LogInformation("Git remote repository added.");
+        }
+    }
+
+    private bool CheckIfRemoteExists(string context)
+    {
+        return !string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", $"remote | grep {GitRemoteName}"));
     }
 
     private void AddGitSafeDirectory()
