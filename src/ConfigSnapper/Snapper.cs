@@ -108,6 +108,7 @@ public class Snapper : IDisposable
         {
             CommandLineHelper.ExecuteCommand(context, "git", "add .");
             CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m \"Snapshot for directory {directoryName}\"");
+            CommandLineHelper.ExecuteCommand(context, "git", $"branch -M {_config.GitBranch}");
 
             PushSnapshotToGitRemote(context);
 
@@ -182,7 +183,7 @@ public class Snapper : IDisposable
     private void AddGitSafeDirectory()
     {
         if (_config.SnapshotSourceDirectory is not null)
-            CommandLineHelper.ExecuteCommand(".", "git", $"config --add safe.directory {_config.SnapshotSourceDirectory}");
+            CommandLineHelper.ExecuteCommand(_config.SnapshotSourceDirectory, "git", $"config --global --add safe.directory {_config.SnapshotSourceDirectory}");
     }
 
     private void CreateGitignore(string context)
@@ -215,6 +216,7 @@ public class Snapper : IDisposable
         {
             CommandLineHelper.ExecuteCommand(context, "git", "add .");
             CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m \"Snapshot for {sourceName}\"");
+            CommandLineHelper.ExecuteCommand(context, "git", $"branch -M {_config.GitBranch}");
 
             PushSnapshotToGitRemote(context);
 
@@ -248,7 +250,7 @@ public class Snapper : IDisposable
         if (string.IsNullOrEmpty(_config.GitRemoteUrl))
             return;
 
-        CommandLineHelper.ExecuteCommand(context, "git", $"push {GitRemoteName} {_config.GitBranch}");
+        CommandLineHelper.ExecuteCommand(context, "git", $"push -u {GitRemoteName} {_config.GitBranch}");
         _logger.LogInformation($"Snapshot pushed to remote repository.");
     }
 
