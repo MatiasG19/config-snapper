@@ -1,14 +1,35 @@
 ﻿using Matiasg19.ConfigSnapper;
+using Matiasg19.ConfigSnapperConsole.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Serilog;
+using System.Reflection;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-string[] arguments = Environment.GetCommandLineArgs();
+CmdArgsParser cmdParser = new();
+cmdParser.RegisterAction(new()
+{
+    Name = "Version",
+    ArgName = "version",
+    ArgNameShort = "v",
+    Parameters = false,
+    Action = () =>
+    {
+        var assembly = Assembly.GetEntryAssembly();
+        System.Console.WriteLine(assembly.GetName().Version);
+        System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+        string version = fvi.FileVersion;
+    }
+});
+
+cmdParser.Parse();
+return;
+
+var arguments = Environment.GetCommandLineArgs();
 const string appSettings = "appSettings.json";
 string appSettingsPath = arguments.Length > 1 ?
     Path.Combine(arguments[1], appSettings) :
