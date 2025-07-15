@@ -18,7 +18,7 @@ public class ConfigSnapper
 
     public string GitRemoteUrl { get; set; } = string.Empty;
 
-    public string GitRemoteName { get; set; } = "";
+    public string GitRemoteName { get; set; } = "origin";
 
     public string GitBranchName { get; set; } = "main";
 }
