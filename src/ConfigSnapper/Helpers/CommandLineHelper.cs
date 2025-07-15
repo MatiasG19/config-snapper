@@ -7,7 +7,7 @@ internal static class CommandLineHelper
 {
     internal static string ExecuteCommand(string workingDirectory, string command, string arguments)
     {
-        Process process = new Process();
+        using Process process = new Process();
         process.StartInfo.FileName = command;
         process.StartInfo.Arguments = arguments;
         process.StartInfo.WorkingDirectory = workingDirectory;

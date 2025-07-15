@@ -57,7 +57,7 @@ public class GitCommands(string context, ILogger logger)
     {
         logger.LogInformation($"Commit all changes to git.");
         CommandLineHelper.ExecuteCommand(context, "git", "add .");
-        CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m {message}");
+        CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m \"{message}\"");
     }
 
     public bool CommitAndPush(string message, string branchName, string remoteName)
@@ -92,7 +92,7 @@ public class GitCommands(string context, ILogger logger)
 
     public bool RemoteExists(string remoteName)
     {
-        return !string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", $"remote -v | grep {remoteName}"));
+        return CommandLineHelper.ExecuteCommand(context, "git", $"remote").Contains(remoteName);
     }
 
     public bool AddRemote(string remoteName, string remoteUrl)
