@@ -56,7 +56,8 @@
     "BackupDirectory": "C:\\Users\\Snapper",
     "OpenTelemetry":  true,
     "GitRemoteUrl": "https://github.com/MatiasG19/my-repo.git",
-    "GitBranch": "main"
+    "GitRemoteName": "origin",
+    "GitBranchName": "main"
 ```
 
 ### Git remote repository
