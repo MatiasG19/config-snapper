@@ -1,5 +1,5 @@
 ﻿using ConfigSnapper.Extensions;
-using ConfigSnapper.Helpers;
+using Matiasg19.ConfigSnapper.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -10,15 +10,16 @@ public class Snapper : IDisposable
     private Configuration.ConfigSnapper _config;
     private List<FileSystemWatcher> _configWatchers = [];
     private ILogger<Snapper> _logger;
+    private GitCommands git;
 
     private const string ConfigSnapperDirectoryName = "ConfigSnapperSnapshots";
     private const string BackupDirectoryName = "ConfigSnapperBackups";
-    private const string GitRemoteName = "origin";
 
     public Snapper(IOptions<Configuration.ConfigSnapper> config, ILogger<Snapper> logger)
     {
         _config = config.Value;
         _logger = logger;
+        git = new("", _logger);
 
         Init();
     }
@@ -28,6 +29,7 @@ public class Snapper : IDisposable
         _config = config;
         using ILoggerFactory loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
         _logger = loggerFactory.CreateLogger<Snapper>();
+        git = new("", _logger);
 
         Init();
     }
@@ -46,21 +48,16 @@ public class Snapper : IDisposable
 
     private bool GitIsInstalled()
     {
-        bool result = false;
-        try
-        {
-            result = CommandLineHelper.ExecuteCommand(".", "git", "--version").StartsWith("git version");
-        }
-        catch
-        {
-            _logger.LogError($"ConfigSnapper requires git installation!");
-        }
-        return result;
+        if (git.IsInstalled())
+            return true;
+
+        _logger.LogError($"ConfigSnapper requires git installation!");
+        return false;
     }
 
     private bool CheckConfig()
     {
-        if (_config.SnapshotSourceFiles.Count > 0 && !string.IsNullOrEmpty(_config.SnapshotSourceDirectory))
+        if (_config.SnapshotSourceFiles.Count > 0 && _config.SnapshotSourceDirectory.IsNotEmpty())
         {
             _logger.LogError("Configuration error. Snapshots can only be created for either files or a directory!");
             return false;
@@ -88,7 +85,7 @@ public class Snapper : IDisposable
 
     public void CreateSnapshot()
     {
-        _logger.LogInformation("ConfigSnapper creating snapshot...");
+        _logger.LogInformation("ConfigSnapper create snapshot.");
 
         CreateDirectorySnapshot();
         CreateFileSnapshot();
@@ -96,7 +93,7 @@ public class Snapper : IDisposable
 
     private void CreateDirectorySnapshot()
     {
-        if (string.IsNullOrEmpty(_config.SnapshotSourceDirectory))
+        if (_config.SnapshotSourceDirectory.IsEmpty())
             return;
 
         string context = _config.SnapshotSourceDirectory;
@@ -104,14 +101,8 @@ public class Snapper : IDisposable
         InitializeGit(context);
 
         string directoryName = Path.GetFileName(context);
-        if (!string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", "status --porcelain")))
+        if (git.CommitAndPush($"Snapshot for directory {directoryName}", _config.GitBranchName, _config.GitRemoteName))
         {
-            CommandLineHelper.ExecuteCommand(context, "git", "add .");
-            CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m \"Snapshot for directory {directoryName}\"");
-            CommandLineHelper.ExecuteCommand(context, "git", $"branch -M {_config.GitBranch}");
-
-            PushSnapshotToGitRemote(context);
-
             _logger.LogInformation($"Snapshot created for directory {directoryName}");
         }
         else
@@ -123,7 +114,7 @@ public class Snapper : IDisposable
         if (_config.SnapshotSourceFiles.Count == 0)
             return;
 
-        string context = string.IsNullOrEmpty(_config.SnapshotDirectory) ?
+        string context = _config.SnapshotDirectory.IsEmpty() ?
              Path.Combine(AppContext.BaseDirectory, ConfigSnapperDirectoryName) :
              Path.Combine(_config.SnapshotDirectory.GetAbsolutePath(), ConfigSnapperDirectoryName);
         InitializeSnapshotDirectory(context);
@@ -139,10 +130,10 @@ public class Snapper : IDisposable
 
             string snapshotPath = Path.Combine(context, snapSource.Key);
             bool snapshotFileDirInitialized = CreateSnapshotFileDirectory(snapSource.Key, snapshotPath);
-            if (snapshotFileDirInitialized || !string.IsNullOrEmpty(CommandLineHelper
-                .ExecuteCommand(AppContext.BaseDirectory, "git", $"diff --no-index {sourcePath} {Path.Combine(snapshotPath, Path.GetFileName(sourcePath))}")))
+            if (snapshotFileDirInitialized || git.Diff(sourcePath,
+                Path.Combine(snapshotPath, Path.GetFileName(sourcePath))).IsNotEmpty())
             {
-                CreateFileSnapshot(context, snapSource.Key, sourcePath, snapshotPath);
+                CreateFileSnapshot(snapSource.Key, sourcePath, snapshotPath);
                 CreateBackup(sourcePath);
             }
         }
@@ -161,41 +152,19 @@ public class Snapper : IDisposable
 
     private void InitializeGit(string context)
     {
-        bool gitRepoExists = Directory.Exists(Path.Combine(context, ".git"));
+        git.SetContext(context);
+        bool gitRepoExists = git.RepositoryExists();
         if (!gitRepoExists)
         {
-            CreateGitignore(context);
-            AddGitSafeDirectory(context);
-            CommandLineHelper.ExecuteCommand(context, "git", "init");
-
-            _logger.LogInformation($"Snapshot directory initialized.");
+            _logger.LogInformation("Initialize Snapshot directory.");
+            git.CreateGitignore(Constants.Resources.Gitignore);
+            git.AddSafeDirectory();
+            git.Initilize(_config.GitBranchName);
         }
 
-        if (!gitRepoExists && !string.IsNullOrEmpty(_config.GitRemoteUrl) && !CheckIfRemoteExists(context))
+        if (!gitRepoExists && _config.GitRemoteUrl.IsNotEmpty() && _config.GitRemoteName.IsNotEmpty())
         {
-            CommandLineHelper.ExecuteCommand(context, "git", $"remote add {GitRemoteName} {_config.GitRemoteUrl}");
-            _logger.LogInformation("Git remote repository added.");
-        }
-    }
-
-    private bool CheckIfRemoteExists(string context)
-    {
-        return !string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", $"remote | grep {GitRemoteName}"));
-    }
-
-    private void AddGitSafeDirectory(string context)
-    {
-        if (_config.SnapshotSourceDirectory is not null)
-            CommandLineHelper.ExecuteCommand(context, "git", $"config --global --add safe.directory {context}");
-    }
-
-    private void CreateGitignore(string context)
-    {
-        string filePath = Path.Combine(context, ".gitignore");
-        if (!Directory.Exists(filePath))
-        {
-            File.WriteAllText(filePath, Constants.Resources.Gitignore);
-            _logger.LogInformation("Gitignore created.");
+            git.AddRemote(_config.GitRemoteName, _config.GitRemoteUrl);
         }
     }
 
@@ -203,28 +172,20 @@ public class Snapper : IDisposable
     {
         if (!Directory.Exists(snapshotPath))
         {
+            _logger.LogInformation($"Initialize Snapshot directory for {snapshotSourceName}.");
             Directory.CreateDirectory(snapshotPath);
-            _logger.LogInformation($"Snapshot directory for {snapshotSourceName} initialized.");
             return true;
         }
         return false;
     }
 
-    private void CreateFileSnapshot(string context, string sourceName, string sourcePath, string snapshotPath)
+    private void CreateFileSnapshot(string sourceName, string sourcePath, string snapshotPath)
     {
         File.Copy(sourcePath, Path.Combine(snapshotPath, Path.GetFileName(sourcePath)), true);
         _logger.LogInformation($"File for {sourceName} copied.");
 
-        if (!string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", "status --porcelain")))
-        {
-            CommandLineHelper.ExecuteCommand(context, "git", "add .");
-            CommandLineHelper.ExecuteCommand(context, "git", $"commit -a -m \"Snapshot for {sourceName}\"");
-            CommandLineHelper.ExecuteCommand(context, "git", $"branch -M {_config.GitBranch}");
-
-            PushSnapshotToGitRemote(context);
-
+        if (git.CommitAndPush($"Snapshot for {sourceName}", _config.GitBranchName, _config.GitRemoteName))
             _logger.LogInformation($"Snapshot created for {sourceName}");
-        }
         else
             _logger.LogInformation($"No changes found for {sourceName}");
     }
@@ -246,15 +207,6 @@ public class Snapper : IDisposable
         string fileExtension = Path.GetExtension(fileName);
         string date = DateTime.Now.ToString("yyyyMMdd_HHmm_ss_fff");
         File.Copy(sourcePath.GetAbsolutePath(), Path.Combine(backupPath, $"{fileNameWithoutExtension}_{date}{fileExtension}"));
-    }
-
-    private void PushSnapshotToGitRemote(string context)
-    {
-        if (string.IsNullOrEmpty(_config.GitRemoteUrl))
-            return;
-
-        CommandLineHelper.ExecuteCommand(context, "git", $"push -u {GitRemoteName} {_config.GitBranch}");
-        _logger.LogInformation($"Snapshot pushed to remote repository.");
     }
 
     public void Dispose()

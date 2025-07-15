@@ -22,4 +22,8 @@ internal static class Extensions
             !string.IsNullOrEmpty(Path.GetPathRoot(path)?
             .Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
     }
+
+    internal static bool IsEmpty(this string value) => value == "";
+
+    internal static bool IsNotEmpty(this string value) => value != "";
 }
