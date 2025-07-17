@@ -10,5 +10,7 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<Version>0.0.1</Version>
+		<InformationalVersion>0.0.1</InformationalVersion>
 	</PropertyGroup>
 </Project>

@@ -1,18 +1,43 @@
 ﻿using Matiasg19.ConfigSnapper;
+using Matiasg19.ConfigSnapperConsole.CommandLine;
+using Matiasg19.ConfigSnapperConsole.CommandLine.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Serilog;
+using System.Reflection;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-string[] arguments = Environment.GetCommandLineArgs();
+CmdArgsParser cmdParser = new();
+var version = new AppVersion();
+var path = new PathToAppSettings();
+
+cmdParser.RegisterAction(version);
+cmdParser.RegisterAction(path);
+
+cmdParser.Parse();
+
+if (version.IsSet)
+{
+    var assembly = Assembly.GetEntryAssembly()!;
+    var internalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion!;
+    Console.WriteLine(internalVersion.Substring(0, internalVersion.IndexOf("+")));
+    return;
+}
+
 const string appSettings = "appSettings.json";
-string appSettingsPath = arguments.Length > 1 ?
-    Path.Combine(arguments[1], appSettings) :
-    Path.Combine(Directory.GetCurrentDirectory(), appSettings);
+string appSettingsPath = "";
+if (path.IsSet)
+{
+    appSettingsPath = Path.Combine(path.Path, appSettings);
+}
+else
+    appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), appSettings);
+
+Console.WriteLine($"Using appSettings form {appSettingsPath}");
 
 var configFile = new ConfigurationBuilder()
     .AddJsonFile(appSettingsPath, optional: false, reloadOnChange: false)
