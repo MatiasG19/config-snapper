@@ -1,5 +1,6 @@
 ﻿using Matiasg19.ConfigSnapper;
-using Matiasg19.ConfigSnapperConsole.Helpers;
+using Matiasg19.ConfigSnapperConsole.CommandLine;
+using Matiasg19.ConfigSnapperConsole.CommandLine.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,29 +12,32 @@ using System.Reflection;
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 CmdArgsParser cmdParser = new();
-cmdParser.RegisterAction(new()
-{
-    Name = "Version",
-    ArgName = "version",
-    ArgNameShort = "v",
-    Parameters = false,
-    Action = () =>
-    {
-        var assembly = Assembly.GetEntryAssembly();
-        System.Console.WriteLine(assembly.GetName().Version);
-        System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-        string version = fvi.FileVersion;
-    }
-});
+var version = new AppVersion();
+var path = new PathToAppSettings();
+
+cmdParser.RegisterAction(version);
+cmdParser.RegisterAction(path);
 
 cmdParser.Parse();
-return;
 
-var arguments = Environment.GetCommandLineArgs();
+if (version.IsSet)
+{
+    var assembly = Assembly.GetEntryAssembly()!;
+    var internalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion!;
+    Console.WriteLine(internalVersion.Substring(0, internalVersion.IndexOf("+")));
+    return;
+}
+
 const string appSettings = "appSettings.json";
-string appSettingsPath = arguments.Length > 1 ?
-    Path.Combine(arguments[1], appSettings) :
-    Path.Combine(Directory.GetCurrentDirectory(), appSettings);
+string appSettingsPath = "";
+if (path.IsSet)
+{
+    appSettingsPath = Path.Combine(path.Path, appSettings);
+}
+else
+    appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), appSettings);
+
+Console.WriteLine($"Using appSettings form {appSettingsPath}");
 
 var configFile = new ConfigurationBuilder()
     .AddJsonFile(appSettingsPath, optional: false, reloadOnChange: false)
