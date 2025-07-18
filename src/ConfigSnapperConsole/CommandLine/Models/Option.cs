@@ -1,5 +1,6 @@
 namespace Matiasg19.ConfigSnapperConsole.CommandLine.Models;
 
+[AttributeUsage(AttributeTargets.Class)]
 public class Option : Attribute
 {
     public string ArgName { get; set; } = "";

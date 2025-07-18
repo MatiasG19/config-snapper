@@ -27,13 +27,16 @@ public class CmdArgsParser
             }
             if (option is not null)
             {
-                option.IsSet = true;
                 var attribute = option.GetType().GetCustomAttribute<Option>()!;
+                if (attribute.Only && i > 0)
+                    throw new ArgumentException($"Argument ${arguments[i]} cannot be combined with other arguments!");
+
+                option.IsSet = true;
                 var properties = option.GetType().GetProperties().Where(p => p.Name != "IsSet").ToArray();
                 if (properties.Length > 0)
                 {
                     if (properties.Length != arguments.Length - i - (emtpyArg ? 0 : 1))
-                        throw new ArgumentException("Arguments count does not match option!");
+                        throw new ArgumentException("Argument count does not match option!");
 
                     if (emtpyArg == false) i++;
                     int index = 0;
@@ -43,6 +46,7 @@ public class CmdArgsParser
                     }
                 }
 
+                attribute.Action();
                 if (attribute.Only)
                     break;
             }
