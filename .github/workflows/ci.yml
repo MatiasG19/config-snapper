@@ -99,7 +99,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v6
         with:
-          context: ./src/ConfigSnapperConsole
+          context: ./src
           push: false
           tags: |
             ghcr.io/matiasg19/configsnapper:latest
