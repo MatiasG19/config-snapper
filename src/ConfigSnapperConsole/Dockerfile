@@ -1,4 +1,4 @@
-TAG=0.0.1
+ARG TAG=0.0.1
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 WORKDIR /ConfigSnapper
