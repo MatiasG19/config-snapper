@@ -82,3 +82,27 @@ jobs:
           /p:NativeAot=true \
           -o bin/Release/linux-x64 \
           ConfigSnapperConsole.csproj
+
+  docker:
+    runs-on: ubuntu-24.04
+    needs: build-test-format
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/ConfigSnapperConsole
+          push: false
+          tags: |
+            ghcr.io/matiasg19/ping:latest
+            ghcr.io/matiasg19/ping:${{ github.ref_name }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64

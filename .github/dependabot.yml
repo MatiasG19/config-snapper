@@ -17,3 +17,14 @@ updates:
       interval: "weekly"
     labels:
       - "dependencies"
+
+  - package-ecosystem: 'docker'
+    directory: "/src/ConfigSnapperConsole"
+    schedule:
+      interval: 'weekly'
+    groups:
+      patch-dependencies:
+        update-types: 
+          - "patch"
+    labels:
+      - 'dependencies'
