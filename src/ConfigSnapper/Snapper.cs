@@ -2,6 +2,7 @@
 using Matiasg19.ConfigSnapper.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Matiasg19.ConfigSnapper.Exceptions;
 
 namespace Matiasg19.ConfigSnapper;
 
@@ -36,11 +37,15 @@ public class Snapper : IDisposable
 
     private void Init()
     {
+        bool errors = false;
         if (!GitIsInstalled())
-            return;
+            errors = true;
 
         if (!CheckConfig())
-            return;
+            errors = true;
+
+        if(errors == true)
+            throw new ConfigSnapperException("Initialization failed! See error logs for details.");
 
         if (_config.Watch)
             InitializeWatchers(_config);
