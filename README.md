@@ -90,7 +90,13 @@ git push origin <branch_name>
 
 ### Run
 
-`docker run configsnapper -v $(pwd)/appSettings.json:/app/appSettings.json`
+```sh
+docker run \
+  -v $(pwd)/appSettings.json:/app/appSettings.json \
+  -v $(pwd)/logs:/app/logs \
+  -v /home/matias/Downloads/ConfigSnapperSnapshots:/app/SnapshotSourceDirectory \
+  configsnapper
+```
 
 ## Install as systemd service
 
