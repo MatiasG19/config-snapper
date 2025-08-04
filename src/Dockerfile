@@ -24,6 +24,8 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime-deps:9.0 AS runt
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/out .
 
 ENTRYPOINT ["./ConfigSnapperConsole"]
