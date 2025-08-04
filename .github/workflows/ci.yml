@@ -102,7 +102,6 @@ jobs:
           context: ./src/ConfigSnapperConsole
           push: false
           tags: |
-            ghcr.io/matiasg19/ping:latest
-            ghcr.io/matiasg19/ping:${{ github.ref_name }}
+            ghcr.io/matiasg19/configsnapper:latest
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
