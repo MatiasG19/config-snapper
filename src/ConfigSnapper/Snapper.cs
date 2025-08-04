@@ -1,8 +1,8 @@
 ﻿using ConfigSnapper.Extensions;
+using Matiasg19.ConfigSnapper.Exceptions;
 using Matiasg19.ConfigSnapper.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Matiasg19.ConfigSnapper.Exceptions;
 
 namespace Matiasg19.ConfigSnapper;
 
@@ -44,7 +44,7 @@ public class Snapper : IDisposable
         if (!CheckConfig())
             errors = true;
 
-        if(errors == true)
+        if (errors == true)
             throw new ConfigSnapperException("Initialization failed! See error logs for details.");
 
         if (_config.Watch)
