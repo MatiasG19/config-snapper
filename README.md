@@ -78,6 +78,20 @@ git config credential.helper store
 git push origin <branch_name>
 ```
 
+## Docker
+
+### Build
+
+`docker build --platform linux/amd64 -t configsnapper .`
+
+### Pull
+
+`docker pull ghcr.io/matiasg19/configsnapper:latest`
+
+### Run
+
+`docker run configsnapper -v $(pwd)/appSettings.json:/app/appSettings.json`
+
 ## Install as systemd service
 
 Create service:
