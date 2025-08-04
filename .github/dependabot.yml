@@ -19,7 +19,7 @@ updates:
       - "dependencies"
 
   - package-ecosystem: 'docker'
-    directory: "/src/ConfigSnapperConsole"
+    directory: "/src"
     schedule:
       interval: 'weekly'
     groups:
