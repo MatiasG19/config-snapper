@@ -12,13 +12,13 @@ RUN dotnet restore -a $TARGETARCH ConfigSnapperConsole/ConfigSnapperConsole.cspr
 COPY . .
 
 RUN dotnet publish -a $TARGETARCH \
-          -p:Version=$TAG \
-          -p:InternalVersion=$TAG \
-          -p:PublishSingleFile=true \
-          --self-contained true \
-          /p:NativeAot=true \
-          -o /app/out \
-          ConfigSnapperConsole/ConfigSnapperConsole.csproj
+            -p:Version=$TAG \
+            -p:InternalVersion=$TAG \
+            -p:PublishSingleFile=true \
+            --self-contained true \
+            /p:NativeAot=true \
+            -o /app/out \
+            ConfigSnapperConsole/ConfigSnapperConsole.csproj
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime-deps:9.0 AS runtime
 
@@ -26,4 +26,4 @@ WORKDIR /app
 
 COPY --from=build /app/out .
 
-ENTRYPOINT ["dotnet", "ConfigSnapperConsole.dll"]
+ENTRYPOINT ["./ConfigSnapperConsole"]
