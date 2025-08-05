@@ -94,7 +94,6 @@ public class Snapper : IDisposable
         string? context = InitializeDirectorySnapshot();
         if(context is not null) 
         {
-            InitializeGit(context);
             _logger.LogInformation("ConfigSnapper directory snapshot initialized.");
             return;
         }
@@ -103,7 +102,6 @@ public class Snapper : IDisposable
         context = InitializeSnapshotDirectory();
         if(context is not null) 
         {
-            InitializeGit(context);
             _logger.LogInformation("ConfigSnapper file snapshot initialized.");
             return;
         }
@@ -115,23 +113,24 @@ public class Snapper : IDisposable
     {
         _logger.LogInformation("ConfigSnapper create snapshot.");
 
+        // Init CreateDirectorySnapshot
         string? context = InitializeDirectorySnapshot();
         if(context is not null) 
         {
-            InitializeGit(context);
-            CreateDirectorySnapshot();
+            CreateDirectorySnapshot(context);
             return;
         }
 
+        // Init CreateFileSnapshot
         context = InitializeSnapshotDirectory();
         if(context is not null) 
         {
-            InitializeGit(context);
-            CreateFileSnapshot();
+            CreateFileSnapshot(context);
+            return;
         }
     }
 
-    private void CreateDirectorySnapshot()
+    private void CreateDirectorySnapshot(string context)
     {
         string directoryName = Path.GetFileName(context);
         if (git.CommitAndPush($"Snapshot for directory {directoryName}", _config.GitBranchName, _config.GitRemoteName))
@@ -149,6 +148,7 @@ public class Snapper : IDisposable
 
         string context = _config.SnapshotSourceDirectory;
 
+        InitializeGit(context);
         return context;
     }
 
@@ -189,6 +189,7 @@ public class Snapper : IDisposable
             _logger.LogInformation($"Snapshot directory created: {context}");
         }
 
+        InitializeGit(context);
         return context;
     }
 
