@@ -1,4 +1,5 @@
 ﻿using ConfigSnapper.Extensions;
+using Matiasg19.ConfigSnapper.Exceptions;
 using Matiasg19.ConfigSnapper.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -36,11 +37,15 @@ public class Snapper : IDisposable
 
     private void Init()
     {
+        bool errors = false;
         if (!GitIsInstalled())
-            return;
+            errors = true;
 
         if (!CheckConfig())
-            return;
+            errors = true;
+
+        if (errors == true)
+            throw new ConfigSnapperException("Initialization failed! See error logs for details.");
 
         if (_config.Watch)
             InitializeWatchers(_config);
@@ -158,8 +163,9 @@ public class Snapper : IDisposable
         {
             _logger.LogInformation("Initialize Snapshot directory.");
             git.CreateGitignore(Constants.Resources.Gitignore);
+            git.Initialize(_config.GitBranchName);
+            git.SetUserNameAndEmail(_config.GitUserName, _config.GitUserEmail);
             git.AddSafeDirectory();
-            git.Initilize(_config.GitBranchName);
         }
 
         if (!gitRepoExists && _config.GitRemoteUrl.IsNotEmpty() && _config.GitRemoteName.IsNotEmpty())

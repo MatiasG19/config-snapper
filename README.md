@@ -57,7 +57,9 @@
     "OpenTelemetry":  true,
     "GitRemoteUrl": "https://github.com/MatiasG19/my-repo.git",
     "GitRemoteName": "origin",
-    "GitBranchName": "main"
+    "GitBranchName": "main",
+    "GitUserName": "ConfigSnapper",
+    "GitUserEmail": "git@configsnapper.com"
 ```
 
 ### Git remote repository
@@ -76,6 +78,27 @@ git config credential.helper store
 
 ```sh
 git push origin <branch_name>
+```
+
+## Docker
+
+### Build
+
+`docker build --platform linux/amd64 -t configsnapper .`
+
+### Pull
+
+`docker pull ghcr.io/matiasg19/configsnapper:latest`
+
+### Run
+
+```sh
+docker run \
+  --user $(id -u):$(id -g) \
+  -v $(pwd)/appSettings.json:/app/appSettings.json \
+  -v $(pwd)/logs:/app/logs \
+  -v $(pwd)$/SnapshotSourceDirectory:/app/SnapshotSourceDirectory \
+  configsnapper
 ```
 
 ## Install as systemd service

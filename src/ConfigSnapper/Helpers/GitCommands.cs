@@ -42,13 +42,13 @@ public class GitCommands(string context, ILogger logger)
         return Directory.Exists(Path.Combine(context, ".git"));
     }
 
-    public void Initilize(string branchName)
+    public void Initialize(string branchName)
     {
         logger.LogInformation("Initialize git repository.");
         CommandLineHelper.ExecuteCommand(context, "git", $"init -b {branchName}");
     }
 
-    public bool UncommitedChangesExist()
+    public bool UncommittedChangesExist()
     {
         return !string.IsNullOrEmpty(CommandLineHelper.ExecuteCommand(context, "git", "status --porcelain"));
     }
@@ -62,7 +62,7 @@ public class GitCommands(string context, ILogger logger)
 
     public bool CommitAndPush(string message, string branchName, string remoteName)
     {
-        if (UncommitedChangesExist())
+        if (UncommittedChangesExist())
         {
             CommitAll(message);
             Push(branchName, remoteName);
@@ -111,6 +111,13 @@ public class GitCommands(string context, ILogger logger)
     public void AddSafeDirectory()
     {
         logger.LogInformation($"Add {context} to git safe directories.");
-        CommandLineHelper.ExecuteCommand(context, "git", $"config --global --add safe.directory {context}");
+        CommandLineHelper.ExecuteCommand(context, "git", $"config --add safe.directory {context}");
+    }
+
+    public void SetUserNameAndEmail(string name, string email)
+    {
+        logger.LogInformation($"Set git user {name} and {email}");
+        CommandLineHelper.ExecuteCommand(context, "git", $"config user.name \"{name}\"");
+        CommandLineHelper.ExecuteCommand(context, "git", $"config user.email \"{email}\"");
     }
 }
