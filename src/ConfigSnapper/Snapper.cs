@@ -163,8 +163,9 @@ public class Snapper : IDisposable
         {
             _logger.LogInformation("Initialize Snapshot directory.");
             git.CreateGitignore(Constants.Resources.Gitignore);
+            git.Initialize(_config.GitBranchName);
+            git.SetUserNameAndEmail(_config.GitUserName, _config.GitUserEmail);
             git.AddSafeDirectory();
-            git.Initilize(_config.GitBranchName);
         }
 
         if (!gitRepoExists && _config.GitRemoteUrl.IsNotEmpty() && _config.GitRemoteName.IsNotEmpty())

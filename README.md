@@ -57,7 +57,9 @@
     "OpenTelemetry":  true,
     "GitRemoteUrl": "https://github.com/MatiasG19/my-repo.git",
     "GitRemoteName": "origin",
-    "GitBranchName": "main"
+    "GitBranchName": "main",
+    "GitUserName": "ConfigSnapper",
+    "GitUserEmail": "git@configsnapper.com"
 ```
 
 ### Git remote repository
@@ -92,9 +94,10 @@ git push origin <branch_name>
 
 ```sh
 docker run \
+  --user $(id -u):$(id -g) \
   -v $(pwd)/appSettings.json:/app/appSettings.json \
   -v $(pwd)/logs:/app/logs \
-  -v /home/matias/Downloads/ConfigSnapperSnapshots:/app/SnapshotSourceDirectory \
+  -v $(pwd)$/SnapshotSourceDirectory:/app/SnapshotSourceDirectory \
   configsnapper
 ```
 

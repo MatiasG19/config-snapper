@@ -21,4 +21,8 @@ public class ConfigSnapper
     public string GitRemoteName { get; set; } = "origin";
 
     public string GitBranchName { get; set; } = "main";
+
+    public string GitUserName { get; set; } = "ConfigSnapper";
+
+    public string GitUserEmail { get; set; } = "git@configsnapper.com";
 }
