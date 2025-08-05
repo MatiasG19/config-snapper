@@ -19,11 +19,11 @@ public class CmdArgsParser
         for (int i = 0; i < arguments.Length; i++)
         {
             availableOptions.TryGetValue(arguments[i], out AbstractOption? option);
-            bool emtpyArg = false;
+            bool emptyArg = false;
             if (option is null)
             {
                 availableOptions.TryGetValue("", out option);
-                emtpyArg = true;
+                emptyArg = true;
             }
             if (option is not null)
             {
@@ -32,10 +32,10 @@ public class CmdArgsParser
                 var properties = option.GetType().GetProperties().Where(p => p.Name != "IsSet").ToArray();
                 if (properties.Length > 0)
                 {
-                    if (properties.Length != arguments.Length - i - (emtpyArg ? 0 : 1))
+                    if (properties.Length != arguments.Length - i - (emptyArg ? 0 : 1))
                         throw new ArgumentException("Arguments count does not match option!");
 
-                    if (emtpyArg == false) i++;
+                    if (emptyArg == false) i++;
                     int index = 0;
                     for (; i < arguments.Length; i++)
                     {
