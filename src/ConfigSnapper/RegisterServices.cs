@@ -10,8 +10,14 @@ public static class RegisterServices
         Console.WriteLine("Service registered: ConfigSnapper");
     }
 
-    public static void UseConfigSnapper(this IServiceProvider serviceCollection)
+    public static void UseConfigSnapper(this IServiceProvider serviceCollection, bool initOnly)
     {
-        serviceCollection.GetRequiredService<Snapper>().CreateSnapshot();
+        var configSnapper = serviceCollection.GetRequiredService<Snapper>();
+        if(initOnly) {
+            configSnapper.Initialize();
+            return;
+        }
+        
+        configSnapper.CreateSnapshot();
     }
 }

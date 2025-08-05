@@ -13,9 +13,11 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 CmdArgsParser cmdParser = new();
 var version = new AppVersion();
+var initOnly = new Init();
 var path = new PathToAppSettings();
 
 cmdParser.RegisterAction(version);
+cmdParser.RegisterAction(initOnly);
 cmdParser.RegisterAction(path);
 
 cmdParser.Parse();
@@ -71,4 +73,4 @@ var host = builder.Build();
 
 host.Start();
 
-host.Services.UseConfigSnapper();
+host.Services.UseConfigSnapper(initOnly.IsSet);
