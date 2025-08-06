@@ -116,7 +116,7 @@ public class GitCommands(string context, ILogger logger)
 
     public void SetUserNameAndEmail(string name, string email)
     {
-        logger.LogInformation($"Set git user {name} and {email}");
+        logger.LogInformation($"Set git user name {name} and email {email}");
         CommandLineHelper.ExecuteCommand(context, "git", $"config user.name \"{name}\"");
         CommandLineHelper.ExecuteCommand(context, "git", $"config user.email \"{email}\"");
     }
