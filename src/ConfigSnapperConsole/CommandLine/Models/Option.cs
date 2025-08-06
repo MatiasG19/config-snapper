@@ -4,8 +4,7 @@ public class Option : Attribute
 {
     public string ArgName { get; set; } = "";
     public string ArgNameShort { get; set; } = "";
-    public bool Only { get; set; } = true;
-    public Action Action { get; set; } = () => { };
+    public bool Only { get; set; } = false;
 }
 
 public class AbstractOption

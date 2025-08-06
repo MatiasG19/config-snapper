@@ -1,6 +1,6 @@
 namespace Matiasg19.ConfigSnapperConsole.CommandLine.Models;
 
-[Option(ArgName = "--version", ArgNameShort = "-v")]
+[Option(ArgName = "--version", ArgNameShort = "-v", Only = true)]
 public sealed class AppVersion : AbstractOption { }
 
 [Option(ArgName = "--init", ArgNameShort = "-i")]
