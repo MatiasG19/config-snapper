@@ -6,46 +6,64 @@ namespace Matiasg19.ConfigSnapperConsole.CommandLine;
 public class CmdArgsParser
 {
     private readonly string[] arguments = Environment.GetCommandLineArgs().Skip(1).ToArray();
-    private readonly Dictionary<string, AbstractOption> availableOptions = [];
+    private readonly Dictionary<string, AbstractOption> registeredOptions = [];
 
-    public void RegisterAction(AbstractOption option)
+    public void RegisterOptions(params AbstractOption[] options)
     {
-        availableOptions.Add(option.GetType().GetCustomAttribute<Option>()!.ArgName, option);
-        availableOptions.TryAdd(option.GetType().GetCustomAttribute<Option>()!.ArgNameShort, option);
+        foreach (var option in options)
+        {
+            var attribute = option.GetType().GetCustomAttribute<Option>()!;
+            registeredOptions.Add(attribute.ArgName, option);
+            registeredOptions.TryAdd(attribute.ArgNameShort, option);
+        }
     }
 
     public void Parse()
     {
         for (int i = 0; i < arguments.Length; i++)
         {
-            availableOptions.TryGetValue(arguments[i], out AbstractOption? option);
+            registeredOptions.TryGetValue(arguments[i], out AbstractOption? option);
             bool emptyArg = false;
             if (option is null)
             {
-                availableOptions.TryGetValue("", out option);
+                registeredOptions.TryGetValue("", out option);
                 emptyArg = true;
             }
-            if (option is not null)
+            if (option is null)
             {
-                option.IsSet = true;
-                var attribute = option.GetType().GetCustomAttribute<Option>()!;
-                var properties = option.GetType().GetProperties().Where(p => p.Name != "IsSet").ToArray();
-                if (properties.Length > 0)
-                {
-                    if (properties.Length != arguments.Length - i - (emptyArg ? 0 : 1))
-                        throw new ArgumentException("Arguments count does not match option!");
+                Console.Error.WriteLine($"Argument {arguments[i]} is not valid!");
+                Environment.Exit(1);
+            }
 
-                    if (emptyArg == false) i++;
-                    int index = 0;
-                    for (; i < arguments.Length; i++)
-                    {
-                        properties[index].SetValue(option, Convert.ChangeType(arguments[i], properties[index].PropertyType));
-                    }
+            option.IsSet = true;
+            var attribute = option.GetType().GetCustomAttribute<Option>()!;
+            var properties = option.GetType().GetProperties().Where(p => p.Name != "IsSet").ToArray();
+            // TODO Fix mapping of multiple option arguments
+            if (properties.Length > 0)
+            {
+                if (properties.Length != arguments.Length - i - (emptyArg ? 0 : 1))
+                {
+                    Console.Error.WriteLine("Argument count does not match option!");
+                    Environment.Exit(1);
                 }
 
-                if (attribute.Only)
-                    break;
+                if (emptyArg == false) i++;
+                int index = 0;
+                for (; i < arguments.Length; i++)
+                {
+                    properties[index].SetValue(option, Convert.ChangeType(arguments[i], properties[index].PropertyType));
+                }
             }
+            if (attribute.Only)
+            {
+                if (i > 0)
+                {
+                    Console.Error.WriteLine($"Argument {arguments[i]} cannot be combined with other options!");
+                    Environment.Exit(1);
+                }
+                break;
+            }
+
         }
     }
 }

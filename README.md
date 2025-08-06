@@ -40,7 +40,10 @@
 | BackupDirectory   | Relative or absolute path for file backups. Leave `null` to store Backups in the same directory of the source file.                                                              |
 | OpenTelemetry     | Open Telemetry is enabled when set to `true`.                                                                                                                                    |
 | GitRemoteUrl      | Git remote url, e.g. `https://github.com/MatiasG19/test-config-snapper.git`. Remote can be only added when `.git` repository is initialized, otherwise it has be added manually. |
+| GitRemoteName     | Git remote name, default `origin`.                                                                                                                                               |
 | GitBranch         | Git remote branch name, default `main`.                                                                                                                                          |
+| GitUserName       | Git user name, default `ConfigSnapper`.                                                                                                                                          |
+| GitUserEmail      | Git user email, default `git@configsnapper.com`.                                                                                                                                 |
 
 **Example configuration:**
 

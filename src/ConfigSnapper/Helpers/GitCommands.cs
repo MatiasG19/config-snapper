@@ -30,7 +30,7 @@ public class GitCommands(string context, ILogger logger)
     public void CreateGitignore(string gitignore)
     {
         string filePath = Path.Combine(context, ".gitignore");
-        if (!Directory.Exists(filePath))
+        if (!File.Exists(filePath))
         {
             logger.LogInformation("Create Gitignore.");
             File.WriteAllText(filePath, gitignore);

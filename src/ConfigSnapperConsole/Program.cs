@@ -1,5 +1,6 @@
 ﻿using Matiasg19.ConfigSnapper;
 using Matiasg19.ConfigSnapperConsole.CommandLine;
+using Matiasg19.ConfigSnapperConsole.CommandLine.Actions;
 using Matiasg19.ConfigSnapperConsole.CommandLine.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,40 +8,22 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using Serilog;
-using System.Reflection;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 CmdArgsParser cmdParser = new();
 var version = new AppVersion();
+var initOnly = new Init();
 var path = new PathToAppSettings();
 
-cmdParser.RegisterAction(version);
-cmdParser.RegisterAction(path);
-
+cmdParser.RegisterOptions(version, initOnly, path);
 cmdParser.Parse();
 
-if (version.IsSet)
-{
-    var assembly = Assembly.GetEntryAssembly()!;
-    var internalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion!;
-    Console.WriteLine(internalVersion.Substring(0, internalVersion.IndexOf("+")));
+if (LogVersion.Action(version))
     return;
-}
-
-const string appSettings = "appSettings.json";
-string appSettingsPath = "";
-if (path.IsSet)
-{
-    appSettingsPath = Path.Combine(path.Path, appSettings);
-}
-else
-    appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), appSettings);
-
-Console.WriteLine($"Using appSettings form {appSettingsPath}");
 
 var configFile = new ConfigurationBuilder()
-    .AddJsonFile(appSettingsPath, optional: false, reloadOnChange: false)
+    .AddJsonFile(GetAppSettingsPath.Action(path), optional: false, reloadOnChange: false)
     .Build();
 
 Matiasg19.ConfigSnapper.Configuration.ConfigSnapper snapperConfig = new();
@@ -71,4 +54,4 @@ var host = builder.Build();
 
 host.Start();
 
-host.Services.UseConfigSnapper();
+host.Services.UseConfigSnapper(initOnly.IsSet);

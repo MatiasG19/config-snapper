@@ -45,7 +45,7 @@ public class Snapper : IDisposable
             errors = true;
 
         if (errors == true)
-            throw new ConfigSnapperException("Initialization failed! See error logs for details.");
+            throw new ConfigSnapperException("Startup checks failed! See error logs for details.");
 
         if (_config.Watch)
             InitializeWatchers(_config);
@@ -88,23 +88,50 @@ public class Snapper : IDisposable
         }
     }
 
+    public void Initialize()
+    {
+        // Init CreateDirectorySnapshot
+        string? context = InitializeDirectorySnapshot();
+        if (context is not null)
+        {
+            _logger.LogInformation("ConfigSnapper directory snapshot initialized.");
+            return;
+        }
+
+        // Init CreateFileSnapshot
+        context = InitializeSnapshotDirectory();
+        if (context is not null)
+        {
+            _logger.LogInformation("ConfigSnapper file snapshot initialized.");
+            return;
+        }
+
+        _logger.LogInformation("ConfigSnapper not initialized. Check configuration file.");
+    }
+
     public void CreateSnapshot()
     {
         _logger.LogInformation("ConfigSnapper create snapshot.");
 
-        CreateDirectorySnapshot();
-        CreateFileSnapshot();
+        // Init CreateDirectorySnapshot
+        string? context = InitializeDirectorySnapshot();
+        if (context is not null)
+        {
+            CreateDirectorySnapshot(context);
+            return;
+        }
+
+        // Init CreateFileSnapshot
+        context = InitializeSnapshotDirectory();
+        if (context is not null)
+        {
+            CreateFileSnapshot(context);
+            return;
+        }
     }
 
-    private void CreateDirectorySnapshot()
+    private void CreateDirectorySnapshot(string context)
     {
-        if (_config.SnapshotSourceDirectory.IsEmpty())
-            return;
-
-        string context = _config.SnapshotSourceDirectory;
-
-        InitializeGit(context);
-
         string directoryName = Path.GetFileName(context);
         if (git.CommitAndPush($"Snapshot for directory {directoryName}", _config.GitBranchName, _config.GitRemoteName))
         {
@@ -114,16 +141,19 @@ public class Snapper : IDisposable
             _logger.LogInformation($"No changes found for directory {directoryName}");
     }
 
-    private void CreateFileSnapshot()
+    private string? InitializeDirectorySnapshot()
     {
-        if (_config.SnapshotSourceFiles.Count == 0)
-            return;
+        if (_config.SnapshotSourceDirectory.IsEmpty())
+            return null;
 
-        string context = _config.SnapshotDirectory.IsEmpty() ?
-             Path.Combine(AppContext.BaseDirectory, ConfigSnapperDirectoryName) :
-             Path.Combine(_config.SnapshotDirectory.GetAbsolutePath(), ConfigSnapperDirectoryName);
-        InitializeSnapshotDirectory(context);
+        string context = _config.SnapshotSourceDirectory;
 
+        InitializeGit(context);
+        return context;
+    }
+
+    private void CreateFileSnapshot(string context)
+    {
         foreach (var snapSource in _config.SnapshotSourceFiles)
         {
             string sourcePath = snapSource.Value.GetAbsolutePath();
@@ -144,8 +174,15 @@ public class Snapper : IDisposable
         }
     }
 
-    private void InitializeSnapshotDirectory(string context)
+    private string? InitializeSnapshotDirectory()
     {
+        if (_config.SnapshotSourceFiles.Count == 0)
+            return null;
+
+        string context = _config.SnapshotDirectory.IsEmpty() ?
+             Path.Combine(AppContext.BaseDirectory, ConfigSnapperDirectoryName) :
+             Path.Combine(_config.SnapshotDirectory.GetAbsolutePath(), ConfigSnapperDirectoryName);
+
         if (!Directory.Exists(context))
         {
             Directory.CreateDirectory(context);
@@ -153,6 +190,7 @@ public class Snapper : IDisposable
         }
 
         InitializeGit(context);
+        return context;
     }
 
     private void InitializeGit(string context)
