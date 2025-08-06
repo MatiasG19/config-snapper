@@ -16,7 +16,7 @@ var version = new AppVersion();
 var initOnly = new Init();
 var path = new PathToAppSettings();
 
-cmdParser.RegisterActions(version, initOnly, path);
+cmdParser.RegisterOptions(version, initOnly, path);
 cmdParser.Parse();
 
 if (LogVersion.Action(version))
