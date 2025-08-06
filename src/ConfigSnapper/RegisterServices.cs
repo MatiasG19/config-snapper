@@ -13,11 +13,12 @@ public static class RegisterServices
     public static void UseConfigSnapper(this IServiceProvider serviceCollection, bool initOnly)
     {
         var configSnapper = serviceCollection.GetRequiredService<Snapper>();
-        if(initOnly) {
+        if (initOnly)
+        {
             configSnapper.Initialize();
             return;
         }
-        
+
         configSnapper.CreateSnapshot();
     }
 }

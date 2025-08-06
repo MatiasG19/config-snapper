@@ -88,11 +88,11 @@ public class Snapper : IDisposable
         }
     }
 
-    public void Initialize() 
+    public void Initialize()
     {
         // Init CreateDirectorySnapshot
         string? context = InitializeDirectorySnapshot();
-        if(context is not null) 
+        if (context is not null)
         {
             _logger.LogInformation("ConfigSnapper directory snapshot initialized.");
             return;
@@ -100,7 +100,7 @@ public class Snapper : IDisposable
 
         // Init CreateFileSnapshot
         context = InitializeSnapshotDirectory();
-        if(context is not null) 
+        if (context is not null)
         {
             _logger.LogInformation("ConfigSnapper file snapshot initialized.");
             return;
@@ -115,7 +115,7 @@ public class Snapper : IDisposable
 
         // Init CreateDirectorySnapshot
         string? context = InitializeDirectorySnapshot();
-        if(context is not null) 
+        if (context is not null)
         {
             CreateDirectorySnapshot(context);
             return;
@@ -123,7 +123,7 @@ public class Snapper : IDisposable
 
         // Init CreateFileSnapshot
         context = InitializeSnapshotDirectory();
-        if(context is not null) 
+        if (context is not null)
         {
             CreateFileSnapshot(context);
             return;
@@ -141,7 +141,7 @@ public class Snapper : IDisposable
             _logger.LogInformation($"No changes found for directory {directoryName}");
     }
 
-    private string? InitializeDirectorySnapshot() 
+    private string? InitializeDirectorySnapshot()
     {
         if (_config.SnapshotSourceDirectory.IsEmpty())
             return null;
