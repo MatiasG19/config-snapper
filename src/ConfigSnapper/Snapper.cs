@@ -106,7 +106,7 @@ public class Snapper : IDisposable
             return;
         }
 
-        _logger.LogInformation("ConfigSnapper nothing initialized.");
+        _logger.LogInformation("ConfigSnapper not initialized. Check configuration file.");
     }
 
     public void CreateSnapshot()
