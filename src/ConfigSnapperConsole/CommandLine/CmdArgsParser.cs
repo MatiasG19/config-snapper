@@ -38,6 +38,7 @@ public class CmdArgsParser
             option.IsSet = true;
             var attribute = option.GetType().GetCustomAttribute<Option>()!;
             var properties = option.GetType().GetProperties().Where(p => p.Name != "IsSet").ToArray();
+            // TODO Fix mapping of multiple option arguments
             if (properties.Length > 0)
             {
                 if (properties.Length != arguments.Length - i - (emptyArg ? 0 : 1))
