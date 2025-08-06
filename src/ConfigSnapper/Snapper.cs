@@ -45,7 +45,7 @@ public class Snapper : IDisposable
             errors = true;
 
         if (errors == true)
-            throw new ConfigSnapperException("Initialization failed! See error logs for details.");
+            throw new ConfigSnapperException("Startup checks failed! See error logs for details.");
 
         if (_config.Watch)
             InitializeWatchers(_config);
