@@ -8,10 +8,13 @@ public class CmdArgsParser
     private readonly string[] arguments = Environment.GetCommandLineArgs().Skip(1).ToArray();
     private readonly Dictionary<string, AbstractOption> availableOptions = [];
 
-    public void RegisterAction(AbstractOption option)
+    public void RegisterActions(params AbstractOption[] options)
     {
-        availableOptions.Add(option.GetType().GetCustomAttribute<Option>()!.ArgName, option);
-        availableOptions.TryAdd(option.GetType().GetCustomAttribute<Option>()!.ArgNameShort, option);
+        foreach(var option in options) 
+        {
+            availableOptions.Add(option.GetType().GetCustomAttribute<Option>()!.ArgName, option);
+            availableOptions.TryAdd(option.GetType().GetCustomAttribute<Option>()!.ArgNameShort, option);
+        }
     }
 
     public void Parse()
