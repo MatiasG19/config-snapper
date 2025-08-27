@@ -59,6 +59,8 @@ public class Resources
 
         # etckeeper end
 
+        *.cache
+
         # Password files
         shadow
         shadow-
