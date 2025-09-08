@@ -24,7 +24,7 @@ jobs:
           restore-keys: ${{ runner.os }}-dotnet-9
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "9.x.x"
           cache: true
@@ -62,7 +62,7 @@ jobs:
           restore-keys: ${{ runner.os }}-dotnet-9
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "9.x.x"
           cache: true
