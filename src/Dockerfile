@@ -20,7 +20,7 @@ RUN dotnet publish -a $TARGETARCH \
             -o /app/out \
             ConfigSnapperConsole/ConfigSnapperConsole.csproj
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime-deps:9.0 AS runtime
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime-deps:10.0 AS runtime
 
 WORKDIR /app
 
