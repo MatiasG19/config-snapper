@@ -65,7 +65,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push Docker image (latest)
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         if: ${{ !github.event.release.prerelease }}
         with:
           context: ./src
@@ -79,7 +79,7 @@ jobs:
             TAG=${{ github.ref_name }}
 
       - name: Build and push Docker image (prerelease)
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         if: ${{ github.event.release.prerelease }}
         with:
           context: ./src
