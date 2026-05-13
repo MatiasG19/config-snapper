@@ -61,6 +61,9 @@ public class Resources
 
         *.cache
 
+        # Snapd
+        snap-*.mount
+
         # Password files
         shadow
         shadow-
