@@ -15,6 +15,8 @@
   <p>Under the hood Config Snapper uses Git to create a snapshot history und uses file system watchers to watch every file change.</p>
 </div>
 
+> Project inspired by etckeeper
+
 ## Features
 
 - Create snaphots on application startup or watch file changes
