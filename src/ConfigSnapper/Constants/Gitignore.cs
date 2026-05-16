@@ -59,6 +59,11 @@ public class Resources
 
         # etckeeper end
 
+        *.cache
+
+        # Snapd
+        snap-*.mount
+
         # Password files
         shadow
         shadow-
