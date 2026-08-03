@@ -29,3 +29,4 @@ RUN apt-get update && apt-get install -y git nano && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/out .
 
 ENTRYPOINT ["./ConfigSnapperConsole"]
+
