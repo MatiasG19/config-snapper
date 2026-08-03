@@ -4,10 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    groups:
-      patch-dependencies:
-        update-types: 
-          - "patch"
     labels:
       - "dependencies"
 
@@ -18,13 +14,9 @@ updates:
     labels:
       - "dependencies"
 
-  - package-ecosystem: 'docker'
+  - package-ecosystem: "docker"
     directory: "/src"
     schedule:
-      interval: 'weekly'
-    groups:
-      patch-dependencies:
-        update-types: 
-          - "patch"
+      interval: "weekly"
     labels:
-      - 'dependencies'
+      - "dependencies"
