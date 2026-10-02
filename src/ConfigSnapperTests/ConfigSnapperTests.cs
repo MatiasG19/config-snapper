@@ -33,7 +33,7 @@ public class ConfigSnapperTests
     {
         var image = await CreateImage();
         Console.WriteLine("Creating container...");
-        return new ContainerBuilder()
+        return new ContainerBuilder("configsnapper:dev")
             .WithImage(image)
             .WithName("ConfigSnapperTest")
             .WithAutoRemove(true)

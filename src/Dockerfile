@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0@sha256:72dd743782f2ae7e5476fd64f6a460045e3998dc862218b80e6944cba79a01b0 AS build
 ARG TAG=0.0.1 
 ARG TARGETARCH
 
@@ -20,7 +20,7 @@ RUN dotnet publish -a $TARGETARCH \
             -o /app/out \
             ConfigSnapperConsole/ConfigSnapperConsole.csproj
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime-deps:9.0 AS runtime
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime-deps:10.0@sha256:53d7e74e5178092627d7f5d7aa7cb27eee50054885d99ee902014b3c11382efa AS runtime
 
 WORKDIR /app
 
@@ -29,3 +29,4 @@ RUN apt-get update && apt-get install -y git nano && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/out .
 
 ENTRYPOINT ["./ConfigSnapperConsole"]
+
